@@ -4,6 +4,7 @@ set -euxo pipefail
 
 provisioner_ip_address="${1:-10.10.10.2}"; shift || true
 tinkerbell_version="${1:-d9d6b637de27704714b179c0f2bf5f2b58b266ac}"; shift || true
+worker_ip_address_prefix="$(echo $provisioner_ip_address | cut -d "." -f 1).$(echo $provisioner_ip_address | cut -d "." -f 2).$(echo $provisioner_ip_address | cut -d "." -f 3)"
 
 # prevent apt-get et al from opening stdin.
 # NB even with this, you'll still get some warnings that you can ignore:
@@ -76,19 +77,27 @@ template_output="$(docker exec -i deploy_tink-cli_1 tink template create --name 
 template_id="$(echo "$template_output" | perl -n -e '/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/ && print $1')"
 docker exec -i deploy_tink-cli_1 tink template get "$template_id"
 
-# provision the bios and uefi virtual machines workers hardware and
-# respective workflow.
+# provision the x86_64 machines workers hardware and respective workflow.
 # see https://tinkerbell.org/hardware-data/
 # see type Hardware at https://github.com/tinkerbell/boots/blob/98462c3397dd28f39572ecad01571ebf0e03974e/packet/models.go#L234
-for i in 1 2; do
-  worker_host_number=$((10+$i))
-  worker_ip_address="$(echo $provisioner_ip_address | cut -d "." -f 1).$(echo $provisioner_ip_address | cut -d "." -f 2).$(echo $provisioner_ip_address | cut -d "." -f 3).$worker_host_number"
-  worker_mac_address="08:00:27:00:00:0$i"
+workers=(
+  "08:00:27:00:00:01 $worker_ip_address_prefix.11 bios false" # the bios_worker vm.
+  "08:00:27:00:00:02 $worker_ip_address_prefix.12 uefi true"  # the uefi_worker vm.
+  "c0:3f:d5:6c:b7:5a $worker_ip_address_prefix.13 nuc true"   # my nuc pm.
+)
+for worker in "${workers[@]}"; do
+  worker_mac_address="$(echo "$worker" | awk '{print $1}')"
+  worker_ip_address="$(echo "$worker" | awk '{print $2}')"
+  worker_name="$(echo "$worker" | awk '{print $3}')"
+  worker_efi_boot="$(echo "$worker" | awk '{print $4}')"
+  worker_id="00000000-0000-4000-8000-$(echo -n "$worker_mac_address" | tr -d :)"
   # create the hardware.
   docker exec -i deploy_tink-cli_1 tink hardware push <<EOF
 {
-  "id": "00000000-0000-4000-8000-00000000000$i",
+  "id": "$worker_id",
+  "name": "$worker_name",
   "arch": "x86_64",
+  "efi_boot": $worker_efi_boot,
   "allow_pxe": true,
   "allow_workflow": true,
   "facility_code": "onprem",
@@ -148,16 +157,17 @@ docker push $provisioner_ip_address/fluent-bit:1.3-arm
 # see https://tinkerbell.org/hardware-data/
 # see type Hardware at https://github.com/tinkerbell/boots/blob/98462c3397dd28f39572ecad01571ebf0e03974e/packet/models.go#L234
 rpis=(
-  'dc:a6:32:27:e0:37 10.10.10.101 rpi1'
-  'dc:a6:32:27:f7:cb 10.10.10.102 rpi2'
-  'dc:a6:32:27:f7:fb 10.10.10.103 rpi3'
-  'dc:a6:32:27:f7:89 10.10.10.104 rpi4'
-  'dc:a6:32:27:f5:46 10.10.10.123 rpijoy'
+  "dc:a6:32:27:e0:37 $worker_ip_address_prefix.101 rpi1"
+  "dc:a6:32:27:f7:cb $worker_ip_address_prefix.102 rpi2"
+  "dc:a6:32:27:f7:fb $worker_ip_address_prefix.103 rpi3"
+  "dc:a6:32:27:f7:89 $worker_ip_address_prefix.104 rpi4"
+  "dc:a6:32:27:f5:46 $worker_ip_address_prefix.123 rpijoy"
 )
 for rpi in "${rpis[@]}"; do
   worker_mac_address="$(echo "$rpi" | awk '{print $1}')"
   worker_ip_address="$(echo "$rpi" | awk '{print $2}')"
   worker_name="$(echo "$rpi" | awk '{print $3}')"
+  worker_id="00000000-0000-4000-8000-$(echo -n "$worker_mac_address" | tr -d :)"
   # create the hardware.
   # NB tinkerbell boots assumes that an arm machine will always uses UEFI when
   #    its PXE booting. it will always send the snp-nolacp.efi file as the boot
@@ -205,7 +215,7 @@ for rpi in "${rpis[@]}"; do
   #     initrd ${base-url}/initramfs-${parch}
   docker exec -i deploy_tink-cli_1 tink hardware push <<EOF
 {
-  "id": "00000000-0000-4000-8000-$(echo -n "$worker_mac_address" | tr -d :)",
+  "id": "$worker_id",
   "name": "$worker_name",
   "arch": "aarch64",
   "efi_boot": true,

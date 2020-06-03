@@ -107,6 +107,28 @@ You should eventually see something alike:
 
 Then repeat the same procedure to launch the `uefi_worker` worker with `vagrant up uefi_worker`.
 
+See which containers are running in the provisioner vm:
+
+```bash
+docker ps
+```
+
+At the time of writing these were the containers running by default:
+
+```plain
+deploy_boots_1
+deploy_cacher_1
+deploy_db_1
+deploy_elasticsearch_1
+deploy_fluentbit_1
+deploy_hegel_1
+deploy_kibana_1
+deploy_nginx_1
+deploy_registry_1
+deploy_tink-cli_1
+deploy_tink-server_1
+```
+
 # Raspberry Pi
 
 Tinkerbell boots and the rpi PXE client are not compatible with each-other and
@@ -139,6 +161,10 @@ The `auto.ipxe` script is handled by tinkerbell boots in:
 * [job/http.go#Job.ServeFile](https://github.com/tinkerbell/boots/blob/10b79956134ae3badae65a668614b3e6b332ca3b/job/http.go#L15-L25)
 * [job/ipxe.go#Job.serveBootScript](https://github.com/tinkerbell/boots/blob/a776430e1230851a873d9c5a945a8b5c8506f09f/job/ipxe.go#L47-L68)
 * [installers/osie/main.go#install](https://github.com/tinkerbell/boots/blob/139cc4cdb1f9537acd3eaeac536e0d86f6df3624/installers/osie/main.go#L23-L36)
+
+# Intel NUC
+
+You can [use the Intel Integrator Toolkit ITK6.efi EFI application](https://downloadmirror.intel.com/29345/eng/Intel%20Integrator%20Toolkit%20User%20Guide.pdf) to set the SMBIOS properties.
 
 # Troubleshooting
 
