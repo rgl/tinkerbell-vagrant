@@ -45,6 +45,7 @@ Vagrant.configure('2') do |config|
     end
     config.vm.provision :shell, path: 'provision-base.sh'
     config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address, $tinkerbell_version]
+    config.vm.provision :shell, path: 'start-tinkerbell.sh', run: 'always'
   end
 
   ['bios', 'uefi'].each_with_index do |firmware, i|
