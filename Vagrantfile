@@ -20,7 +20,7 @@ $tinkerbell_version = 'd9d6b637de27704714b179c0f2bf5f2b58b266ac' # 2020-05-26T13
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
 Vagrant.configure('2') do |config|
-  config.vm.box = 'ubuntu-18.04-amd64'
+  config.vm.box = 'ubuntu-20.04-amd64'
 
   config.vm.provider :libvirt do |lv, config|
     lv.memory = 4*1024
