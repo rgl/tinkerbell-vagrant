@@ -71,6 +71,8 @@ EOF
 
 cat >~/.bash_history <<'EOF'
 etherwake -i eth1 c0:3f:d5:6c:b7:5a
+docker exec -i deploy_tink-cli_1 tink workflow list
+workflow_id=''; watch "docker exec -i deploy_tink-cli_1 tink workflow events $workflow_id"
 ssh pi@rpi1.test
 ansible -f 10 -b -m command -a 'vcgencmd measure_temp' cluster
 source /opt/ansible/bin/activate && cd /home/vagrant/rpi-cluster
