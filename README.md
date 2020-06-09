@@ -234,6 +234,10 @@ docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from workflow'
 docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from workflow_event order by created_at desc'
 ```
 
+# Notes
+
+* All workflow actions run as `--privileged` containers.
+
 # Reference
 
 * [IEEE 802.1Q VLAN Tutorial](http://www.microhowto.info/tutorials/802.1q.html)
