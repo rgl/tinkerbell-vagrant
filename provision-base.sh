@@ -70,6 +70,7 @@ set completion-ignore-case on
 EOF
 
 cat >~/.bash_history <<'EOF'
+etherwake -i eth1 c0:3f:d5:6c:b7:5a
 ssh pi@rpi1.test
 ansible -f 10 -b -m command -a 'vcgencmd measure_temp' cluster
 source /opt/ansible/bin/activate && cd /home/vagrant/rpi-cluster
@@ -145,3 +146,8 @@ rpcinfo -t localhost nfs 4
 # provision useful tools.
 
 apt-get install -y jq
+
+# etherwake lets us power-on a machine by sending a Wake-on-LAN (WOL)
+# magic packet to its ethernet card.
+# e.g. etherwake -i eth1 c0:3f:d5:6c:b7:5a
+apt-get install -y etherwake
