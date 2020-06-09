@@ -129,6 +129,16 @@ deploy_tink-cli_1
 deploy_tink-server_1
 ```
 
+Those containers were started with docker-compose and you can use it to
+inspect the tinkerbell containers:
+
+**NB** do not start the `deploy_certs_1` container as it can mess with your installation.
+
+```bash
+source /root/tink/envrc
+docker-compose -f /root/tink/deploy/docker-compose.yml ps
+```
+
 # Raspberry Pi
 
 Tinkerbell boots and the rpi PXE client are not compatible with each-other and
