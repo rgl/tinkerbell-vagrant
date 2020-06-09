@@ -227,6 +227,8 @@ PostgreSQL database, you can access its console with, e.g.:
 ```bash
 vagrant ssh provisioner
 sudo su -l
+docker exec -i deploy_db_1 psql -U tinkerbell -c '\dt'
+docker exec -i deploy_db_1 psql -U tinkerbell -c '\d hardware'
 docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from template'
 docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from workflow'
 docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from workflow_event order by created_at desc'
