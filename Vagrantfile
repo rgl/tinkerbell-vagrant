@@ -28,7 +28,7 @@ Vagrant.configure('2') do |config|
     lv.cpu_mode = 'host-passthrough'
     # lv.nested = true
     lv.keymap = 'pt'
-    config.vm.synced_folder '.', '/vagrant', type: 'nfs'
+    config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 4, nfs_udp: false
   end
 
   config.vm.define :provisioner do |config|
