@@ -79,9 +79,9 @@ network:
 
 Build and install the [Ubuntu Linux base box](https://github.com/rgl/ubuntu-vagrant).
 
-After the above is in place, run `vagrant up provisioner` to launch the provisioner.
+After the above is in place, run `vagrant up provisioner --no-destroy-on-error` to launch the provisioner.
 
-Then launch the `bios_worker` worker with `vagrant up bios_worker`.
+Then launch the `bios_worker` worker with `vagrant up bios_worker --no-destroy-on-error`.
 
 You can watch the progress with:
 
@@ -105,7 +105,7 @@ You should eventually see something alike:
 +--------------------------------------+-------------+-------------+----------------+---------------------------------+--------------------+
 ```
 
-Then repeat the same procedure to launch the `uefi_worker` worker with `vagrant up uefi_worker`.
+Then repeat the same procedure to launch the `uefi_worker` worker with `vagrant up uefi_worker --no-destroy-on-error`.
 
 See which containers are running in the provisioner vm:
 
