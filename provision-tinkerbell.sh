@@ -3,7 +3,7 @@
 set -euxo pipefail
 
 provisioner_ip_address="${1:-10.10.10.2}"; shift || true
-tinkerbell_version="${1:-d9d6b637de27704714b179c0f2bf5f2b58b266ac}"; shift || true
+tinkerbell_version="${1:-6a9ed8a368df1ff8f79a9a88d1b274687c41228c}"; shift || true
 worker_ip_address_prefix="$(echo $provisioner_ip_address | cut -d "." -f 1).$(echo $provisioner_ip_address | cut -d "." -f 2).$(echo $provisioner_ip_address | cut -d "." -f 3)"
 
 # prevent apt-get et al from opening stdin.

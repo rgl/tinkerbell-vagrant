@@ -13,7 +13,7 @@ $provisioner_ip_address = '10.10.10.2'
 # NB although we are installing from a version, the setup.sh script
 #    that we download from the tink repo still uses some unversioned
 #    dependencies.
-$tinkerbell_version = 'd9d6b637de27704714b179c0f2bf5f2b58b266ac' # 2020-05-26T13:13:57Z
+$tinkerbell_version = '6a9ed8a368df1ff8f79a9a88d1b274687c41228c' # 2020-06-10T15:23:33Z
 
 # to make sure the nodes are created sequentially, we
 # have to force a --no-parallel execution.

@@ -18,7 +18,7 @@ docker push $provisioner_ip_address/hello-world:arm32v7-latest
 
 # provision the example hello-world workflow template.
 # see https://tinkerbell.org/examples/hello-world/
-docker exec -i deploy_tink-cli_1 sh -c 'cat >/tmp/hello-world-template.yml' <<EOF
+template_output="$(docker exec -i deploy_tink-cli_1 tink template create --name hello-world <<EOF
 version: '0.1'
 global_timeout: 600
 tasks:
@@ -29,7 +29,7 @@ tasks:
         image: hello-world:{{.arch}}-latest
         timeout: 60
 EOF
-template_output="$(docker exec -i deploy_tink-cli_1 tink template create --name hello-world --path /tmp/hello-world-template.yml)"
+)"
 template_id="$(echo "$template_output" | perl -n -e '/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/ && print $1')"
 docker exec -i deploy_tink-cli_1 tink template get "$template_id"
 
