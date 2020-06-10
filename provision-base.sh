@@ -147,7 +147,7 @@ rpcinfo -t localhost nfs 4
 #
 # provision useful tools.
 
-apt-get install -y jq
+apt-get install -y jq jo
 
 # etherwake lets us power-on a machine by sending a Wake-on-LAN (WOL)
 # magic packet to its ethernet card.

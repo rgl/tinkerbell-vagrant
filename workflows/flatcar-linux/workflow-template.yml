@@ -1,0 +1,36 @@
+version: "0.1"
+name: flatcar-linux
+global_timeout: 1800
+tasks:
+  - name: flatcar-install
+    worker: {{.device_1}}
+    # volumes:
+    #   - /dev:/dev
+    actions:
+      - name: create-ignition
+        image: flatcar-install
+        command:
+          - sh
+          - -c
+          - echo '{{.ignition}}' | base64 -d >/workflow/ignition.json
+      - name: install
+        image: flatcar-install
+        command:
+          # see https://docs.flatcar-linux.org/os/installing-to-disk/
+          # see https://github.com/flatcar-linux/docs/blob/master/os/installing-to-disk.md
+          # see https://github.com/flatcar-linux/init/blob/flatcar-master/bin/flatcar-install
+          - /usr/local/bin/flatcar-install
+          - -d
+          - /dev/sda
+          - -C
+          - stable
+          - -i
+          - /workflow/ignition.json
+      - name: reboot
+        image: reboot
+        environment:
+          REGISTRY: {{.registry}}
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /etc/docker:/etc/docker
+          - /root:/root

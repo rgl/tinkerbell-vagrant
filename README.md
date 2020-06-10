@@ -1,5 +1,3 @@
-**NB** This is still a Work In Progress. Its NOT YET FULLY WORKING.
-
 This is a [Vagrant](https://www.vagrantup.com/) Environment for playing with [Tinkerbell](https://tinkerbell.org/) for provisioning Raspberry Pis.
 
 # Usage

@@ -43,6 +43,22 @@ Vagrant.configure('2') do |config|
         libvirt__dhcp_enabled: false,
         libvirt__forward_mode: 'none'
     end
+    config.trigger.before :up do |trigger|
+      trigger.run = {
+        inline: '''bash -euc \'
+file_paths=(
+  ~/.ssh/id_rsa.pub
+)
+for file_path in "${file_paths[@]}"; do
+  if [ -f $file_path ]; then
+    mkdir -p tmp
+    cp $file_path tmp
+  fi
+done
+\'
+'''
+      }
+    end
     config.vm.provision :shell, path: 'provision-base.sh'
     config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address, $tinkerbell_version]
     config.vm.provision :shell, name: 'Ensure tinkerbell is running', path: 'start-tinkerbell.sh', run: 'always'

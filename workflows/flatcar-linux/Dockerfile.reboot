@@ -1,0 +1,8 @@
+# NB YES its overkill to use docker to implement a reboot, but there
+#    is no other way right now.
+#    see https://github.com/tinkerbell/tink/issues/71
+FROM docker
+
+ADD reboot.sh /
+
+ENTRYPOINT ["/reboot.sh"]

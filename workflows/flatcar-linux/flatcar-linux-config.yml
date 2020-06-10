@@ -1,0 +1,12 @@
+# see https://docs.flatcar-linux.org/container-linux-config-transpiler/doc/configuration/
+# NB to insert a literal dollar sign in this file you must use ${DOLLAR}
+
+passwd:
+  users:
+    # NB always use the pre-configured core user as the management user (it
+    #    has the correct permissions already configured, so we do not need
+    #    to configure them here).
+    - name: core
+      password_hash: '${DOLLAR}1${DOLLAR}LVj6A/Ax${DOLLAR}gS43AY0ZdM24ClGZyuIst0' # core
+      ssh_authorized_keys:
+        - $CORE_SSH_PUBLIC_KEY

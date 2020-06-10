@@ -1,0 +1,11 @@
+FROM ubuntu:20.04
+
+RUN apt update && apt install -y udev gpg wget
+
+# see https://docs.flatcar-linux.org/os/installing-to-disk/
+# see https://github.com/flatcar-linux/docs/blob/master/os/installing-to-disk.md
+# see https://github.com/flatcar-linux/init/blob/flatcar-master/bin/flatcar-install
+RUN wget \
+        -qO /usr/local/bin/flatcar-install \
+        https://raw.githubusercontent.com/flatcar-linux/init/flatcar-master/bin/flatcar-install && \
+    chmod +x /usr/local/bin/flatcar-install

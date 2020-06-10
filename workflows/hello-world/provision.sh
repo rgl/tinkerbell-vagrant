@@ -39,7 +39,6 @@ docker exec -i deploy_tink-cli_1 tink template get "$template_id"
 workers=(
   "08:00:27:00:00:01 $worker_ip_address_prefix.11 bios false" # the bios_worker vm.
   "08:00:27:00:00:02 $worker_ip_address_prefix.12 uefi true"  # the uefi_worker vm.
-  "c0:3f:d5:6c:b7:5a $worker_ip_address_prefix.13 nuc true"   # my nuc pm.
 )
 for worker in "${workers[@]}"; do
   worker_mac_address="$(echo "$worker" | awk '{print $1}')"
