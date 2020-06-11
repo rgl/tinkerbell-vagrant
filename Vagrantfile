@@ -61,7 +61,10 @@ done
     end
     config.vm.provision :shell, path: 'provision-base.sh'
     config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address, $tinkerbell_version]
+    config.vm.provision :shell, path: 'provision-tink-wizard.sh'
     config.vm.provision :shell, name: 'Ensure tinkerbell is running', path: 'start-tinkerbell.sh', run: 'always'
+    config.vm.provision :shell, name: 'Ensure tink-wizard is running', path: 'start-tink-wizard.sh', run: 'always'
+    config.vm.provision :shell, name: 'Summary', path: 'summary.sh', run: 'always'
   end
 
   ['bios', 'uefi'].each_with_index do |firmware, i|
