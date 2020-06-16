@@ -21,7 +21,6 @@ $(cat /root/tink/envrc)
 # addresses
 #
 
-kibana:         http://$host_ip_address:5601
 tink-wizard:    http://$host_ip_address:7676
 
 EOF

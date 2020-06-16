@@ -85,11 +85,10 @@ You can watch the progress with:
 
 ```bash
 vagrant ssh provisioner
-sudo su -l
+sudo -i
 docker exec -i deploy_tink-cli_1 tink workflow list
 # NB get the workflow_id from the output of the previous workflow list command.
-workflow_id=''
-watch "docker exec -i deploy_tink-cli_1 tink workflow events $workflow_id"
+workflow_id='' watch 'docker exec -i deploy_tink-cli_1 tink workflow events $workflow_id'
 ```
 
 You should eventually see something alike:
@@ -117,10 +116,7 @@ At the time of writing these were the containers running by default:
 deploy_boots_1
 deploy_cacher_1
 deploy_db_1
-deploy_elasticsearch_1
-deploy_fluentbit_1
 deploy_hegel_1
-deploy_kibana_1
 deploy_nginx_1
 deploy_registry_1
 deploy_tink-cli_1
@@ -129,8 +125,6 @@ deploy_tink-server_1
 
 Those containers were started with docker-compose and you can use it to
 inspect the tinkerbell containers:
-
-**NB** do not start the `deploy_certs_1` container as it can mess with your installation.
 
 ```bash
 source /root/tink/envrc
@@ -187,36 +181,6 @@ wireshark -k -i <(ssh -F tmp/provisioner-ssh-config.conf provisioner 'sudo tcpdu
 
 You can also do it from the host by capturing traffic from the `br-rpi` or `vlan2` interface.
 
-## Logs
-
-The logs are sent to Elasticsearch and you can inspect them with Kibana which
-is available at the port 5601 of the host IP address.
-
-To get the `boots` component logs, execute the following request in
-the Kibana Dev Tools Console:
-
-```json
-GET _cat/indices
-
-GET boots/_search
-{
-  "query": {
-    "match_all": {}
-  },
-  "_source": [
-    "@timestamp",
-    "log"
-  ],
-  "sort": [
-    {
-      "@timestamp": "desc"
-    }
-  ]
-}
-
-DELETE boots
-```
-
 ## Database
 
 Tinkerbell uses the [tinkerbell](https://github.com/tinkerbell/tink/blob/master/deploy/db/tinkerbell-init.sql)
@@ -224,7 +188,7 @@ PostgreSQL database, you can access its console with, e.g.:
 
 ```bash
 vagrant ssh provisioner
-sudo su -l
+sudo -i
 docker exec -i deploy_db_1 psql -U tinkerbell -c '\dt'
 docker exec -i deploy_db_1 psql -U tinkerbell -c '\d hardware'
 docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from template'

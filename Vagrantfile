@@ -13,7 +13,11 @@ $provisioner_ip_address = '10.10.10.2'
 # NB although we are installing from a version, the setup.sh script
 #    that we download from the tink repo still uses some unversioned
 #    dependencies.
-$tinkerbell_version = '6a9ed8a368df1ff8f79a9a88d1b274687c41228c' # 2020-06-10T15:23:33Z
+$tinkerbell_version = 'ffd50a57f79522683bcbcdb2fbc512b46e0b4765' # 2020-06-16T15:38:14Z
+
+# docker(-compose) versions.
+$docker_version = '5:19.03.11~3-0~ubuntu-focal' # NB execute apt-cache madison docker-ce to known the available versions.
+$docker_compose_version = '1.26.0'              # see https://github.com/docker/compose/releases
 
 # to make sure the nodes are created sequentially, we
 # have to force a --no-parallel execution.
@@ -60,6 +64,7 @@ done
       }
     end
     config.vm.provision :shell, path: 'provision-base.sh'
+    config.vm.provision :shell, path: 'provision-tinkerbell-dependencies.sh', args: [$docker_version, $docker_compose_version]
     config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address, $tinkerbell_version]
     config.vm.provision :shell, path: 'provision-tink-wizard.sh'
     config.vm.provision :shell, name: 'Ensure tinkerbell is running', path: 'start-tinkerbell.sh', run: 'always'

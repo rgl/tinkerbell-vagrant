@@ -91,10 +91,10 @@ done
 #    NB the initrd was manually created and has no source.
 # see https://github.com/ContainerSolutions/tinkerbell-rpi4-workflow/tree/rpi4-tinkerbell-uefi
 wget \
-  -qO /var/tinkerbell/nginx/misc/osie/current/vmlinuz-aarch64 \
+  -qO /root/tink/deploy/state/webroot/misc/osie/current/vmlinuz-aarch64 \
   https://storage.googleapis.com/rpi4-uefi-tinkerbell/vmlinuz-aarch64
 wget \
-  -qO /var/tinkerbell/nginx/misc/osie/current/initramfs-aarch64 \
+  -qO /root/tink/deploy/state/webroot/misc/osie/current/initramfs-aarch64 \
   https://storage.googleapis.com/rpi4-uefi-tinkerbell/initramfs-aarch64
 
 # install a version of the tink-worker image that is compatible with the rpi4.
