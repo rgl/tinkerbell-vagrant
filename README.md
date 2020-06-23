@@ -107,20 +107,42 @@ Then repeat the same procedure to launch the `uefi_worker` worker with `vagrant 
 See which containers are running in the provisioner vm:
 
 ```bash
-docker ps
+# see https://docs.docker.com/engine/reference/commandline/ps/#formatting
+python3 <<'EOF'
+import io
+import json
+import subprocess
+from tabulate import tabulate
+
+def info():
+  p = subprocess.Popen(
+    ('docker', 'ps', '-a', '--no-trunc', '--format', '{{.ID}}'),
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT)
+  for id in (l.rstrip("\r\n") for l in io.TextIOWrapper(p.stdout)):
+    p = subprocess.Popen(
+      ('docker', 'inspect', id),
+      stdout=subprocess.PIPE,
+      stderr=subprocess.STDOUT)
+    for c in json.load(p.stdout):
+      yield (c['Name'], c['Config']['Image'], c['Image'])
+
+print(tabulate(info(), headers=('ContainerName', 'ImageName', 'ImageId')))
+EOF
 ```
 
 At the time of writing these were the containers running by default:
 
 ```plain
-deploy_boots_1
-deploy_cacher_1
-deploy_db_1
-deploy_hegel_1
-deploy_nginx_1
-deploy_registry_1
-deploy_tink-cli_1
-deploy_tink-server_1
+ContainerName               ImageName                           ImageId
+--------------------------  ----------------------------------  -----------------------------------------------------------------------
+/deploy_boots_1             quay.io/tinkerbell/boots:latest     sha256:25e5bdc52d4266e5b71517089be0e41c591e2d29d9be0b3770234482af963369
+/deploy_db_1                postgres:10-alpine                  sha256:88b67a1d2cea54873a17ee1fdc085f7042a6f934a7580ca4d33356e223d5b3f3
+/deploy_hegel_1             quay.io/tinkerbell/hegel:latest     sha256:a166001107c70856d8ccfe87dcd02a014689807c8644f952ce4aa79e0d7f12ba
+/deploy_nginx_1             nginx:alpine                        sha256:7d0cdcc60a96a5124763fddf5d534d058ad7d0d8d4c3b8be2aefedf4267d0270
+/deploy_registry_1          deploy_registry                     sha256:1a4d4cca2637da9aba1a8d6fa073b1d39d1edc65a5b4da809320df282505f447
+/deploy_tink-cli_1          quay.io/tinkerbell/tink-cli:latest  sha256:6a83eb86312c55adf8646fa37082d25f380276ae76d99aadce99a9d5a4c11a17
+/deploy_tink-server_1       quay.io/tinkerbell/tink:latest      sha256:90fffc056a9d799c267f9f6093731eec0cde66a90ca1b5ce06e1623930d7a7ca
 ```
 
 Those containers were started with docker-compose and you can use it to

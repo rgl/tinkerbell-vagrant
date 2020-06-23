@@ -13,7 +13,7 @@ $provisioner_ip_address = '10.10.10.2'
 # NB although we are installing from a version, the setup.sh script
 #    that we download from the tink repo still uses some unversioned
 #    dependencies.
-$tinkerbell_version = 'ffd50a57f79522683bcbcdb2fbc512b46e0b4765' # 2020-06-16T15:38:14Z
+$tinkerbell_version = '4e59b92cdafcd964e5a07a08df455c0b384c5782' # 2020-06-23T07:01:32Z
 
 # docker(-compose) versions.
 $docker_version = '5:19.03.11~3-0~ubuntu-focal' # NB execute apt-cache madison docker-ce to known the available versions.

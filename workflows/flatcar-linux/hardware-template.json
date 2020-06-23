@@ -1,29 +1,32 @@
 {
   "id": "$worker_id",
-  "name": "$worker_name",
-  "arch": "x86_64",
-  "efi_boot": $worker_efi_boot,
-  "allow_pxe": true,
-  "allow_workflow": true,
-  "facility_code": "onprem",
-  "ip_addresses": [
-    {
-      "enabled": true,
-      "address_family": 4,
-      "address": "$worker_ip_address",
-      "netmask": "255.255.255.0",
-      "gateway": "$provisioner_ip_address",
-      "management": true,
-      "public": false
-    }
-  ],
-  "network_ports": [
-    {
-      "data": {
-        "mac": "$worker_mac_address"
-      },
-      "name": "eth0",
-      "type": "data"
-    }
-  ]
+  "network": {
+    "interfaces": [
+      {
+        "dhcp": {
+          "arch": "x86_64",
+          "uefi": $worker_efi_boot,
+          "mac": "$worker_mac_address",
+          "ip": {
+            "address": "$worker_ip_address",
+            "netmask": "255.255.255.0",
+            "gateway": "$provisioner_ip_address"
+          },
+          "hostname": "$worker_name",
+          "iface_name": "eth0"
+        },
+        "netboot": {
+          "allow_pxe": true,
+          "allow_workflow": true
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "facility": {
+      "facility_code": "onprem"
+    },
+    "instance": {},
+    "state": "provisioning"
+  }
 }

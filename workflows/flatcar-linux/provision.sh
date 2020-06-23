@@ -27,9 +27,9 @@ docker exec -i deploy_tink-cli_1 tink template get "$template_id"
 
 # create the x86_64 machines workers hardware and respective workflow.
 # see https://tinkerbell.org/hardware-data/
-# see type Hardware at https://github.com/tinkerbell/boots/blob/98462c3397dd28f39572ecad01571ebf0e03974e/packet/models.go#L234
+# see type HardwareTinkerbellV1 at https://github.com/tinkerbell/boots/blob/b88dc4e644701b5a946e5e6dee5888b2503294f7/packet/models.go#L101-L106
 workers=(
-  "c0:3f:d5:6c:b7:5a $worker_ip_address_prefix.13 nuc true"   # my nuc pm.
+  "c0:3f:d5:6c:b7:5a $worker_ip_address_prefix.13 nuc true"   # my nuc physical machine.
 )
 for worker in "${workers[@]}"; do
   export worker_mac_address="$(echo "$worker" | awk '{print $1}')"

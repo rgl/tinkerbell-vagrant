@@ -3,7 +3,7 @@
 set -euxo pipefail
 
 provisioner_ip_address="${1:-10.10.10.2}"; shift || true
-tinkerbell_version="${1:-ffd50a57f79522683bcbcdb2fbc512b46e0b4765}"; shift || true
+tinkerbell_version="${1:-4e59b92cdafcd964e5a07a08df455c0b384c5782}"; shift || true
 worker_ip_address_prefix="$(echo $provisioner_ip_address | cut -d "." -f 1).$(echo $provisioner_ip_address | cut -d "." -f 2).$(echo $provisioner_ip_address | cut -d "." -f 3)"
 host_number="$(($(echo $provisioner_ip_address | cut -d "." -f 4 | xargs) + 1))"
 nginx_ip_address="$(echo $provisioner_ip_address | cut -d "." -f 1).$(echo $provisioner_ip_address | cut -d "." -f 2).$(echo $provisioner_ip_address | cut -d "." -f 3).$host_number"

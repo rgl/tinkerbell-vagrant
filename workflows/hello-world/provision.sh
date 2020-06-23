@@ -35,7 +35,7 @@ docker exec -i deploy_tink-cli_1 tink template get "$template_id"
 
 # provision the x86_64 machines workers hardware and respective workflow.
 # see https://tinkerbell.org/hardware-data/
-# see type Hardware at https://github.com/tinkerbell/boots/blob/98462c3397dd28f39572ecad01571ebf0e03974e/packet/models.go#L234
+# see type HardwareTinkerbellV1 at https://github.com/tinkerbell/boots/blob/b88dc4e644701b5a946e5e6dee5888b2503294f7/packet/models.go#L101-L106
 workers=(
   "08:00:27:00:00:01 $worker_ip_address_prefix.11 bios false" # the bios_worker vm.
   "08:00:27:00:00:02 $worker_ip_address_prefix.12 uefi true"  # the uefi_worker vm.
@@ -50,32 +50,35 @@ for worker in "${workers[@]}"; do
   docker exec -i deploy_tink-cli_1 tink hardware push <<EOF
 {
   "id": "$worker_id",
-  "name": "$worker_name",
-  "arch": "x86_64",
-  "efi_boot": $worker_efi_boot,
-  "allow_pxe": true,
-  "allow_workflow": true,
-  "facility_code": "onprem",
-  "ip_addresses": [
-    {
-      "enabled": true,
-      "address_family": 4,
-      "address": "$worker_ip_address",
-      "netmask": "255.255.255.0",
-      "gateway": "$provisioner_ip_address",
-      "management": true,
-      "public": false
-    }
-  ],
-  "network_ports": [
-    {
-      "data": {
-        "mac": "$worker_mac_address"
-      },
-      "name": "eth0",
-      "type": "data"
-    }
-  ]
+  "network": {
+    "interfaces": [
+      {
+        "dhcp": {
+          "arch": "x86_64",
+          "uefi": $worker_efi_boot,
+          "mac": "$worker_mac_address",
+          "ip": {
+            "address": "$worker_ip_address",
+            "netmask": "255.255.255.0",
+            "gateway": "$provisioner_ip_address"
+          },
+          "hostname": "$worker_name",
+          "iface_name": "eth0"
+        },
+        "netboot": {
+          "allow_pxe": true,
+          "allow_workflow": true
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "facility": {
+      "facility_code": "onprem"
+    },
+    "instance": {},
+    "state": "provisioning"
+  }
 }
 EOF
   docker exec -i deploy_tink-cli_1 tink hardware mac "$worker_mac_address" | jq .
@@ -84,6 +87,9 @@ EOF
   workflow_id="$(echo "$workflow_output" | perl -n -e '/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/ && print $1')"
   docker exec -i deploy_tink-cli_1 tink workflow get "$workflow_id"
 done
+
+# do not provisiong rpi has its currently broken.
+exit 0
 
 # replace the osie kernel and initrd with one what works with rpi4.
 # NB the custom kernel and initrd was manually built by Adam Otto.
