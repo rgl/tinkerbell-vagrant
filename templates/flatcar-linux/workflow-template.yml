@@ -3,9 +3,7 @@ name: flatcar-linux
 global_timeout: 1800
 tasks:
   - name: flatcar-install
-    worker: {{.device_1}}
-    # volumes:
-    #   - /dev:/dev
+    worker: '{{.device_1}}'
     actions:
       - name: create-ignition
         image: flatcar-install
@@ -15,22 +13,32 @@ tasks:
           - echo '{{.ignition}}' | base64 -d >/workflow/ignition.json
       - name: install
         image: flatcar-install
+        volumes:
+          - /dev:/dev
+        #  - /sys/firmware/efi/efivars:/sys/firmware/efi/efivars
         command:
+          # TODO mount -o remount,rw /sys/firmware/efi/efivars
+          #      then we can execute efibootmgr --bootorder 0005 # 0005 in my case was the SATA disk.
+          #      NB partx --show /dev/sda
+          #      NB sda1 is the EFI-SYSTEM partition.
+          #      NB sda2 is the BIOS-BOOT partition.
+          #      NB sda3 is the USR-A partition.
+          #      NB sda4 is the USR-B partition.
+          #      NB sda6 is the OEM partition (ignition is stored here as config.ign)
+          #      NB sda7 is the OEM-CONFIG partition.
+          #      NB sda9 is the ROOT partition.
           # see https://docs.flatcar-linux.org/os/installing-to-disk/
           # see https://github.com/flatcar-linux/docs/blob/master/os/installing-to-disk.md
           # see https://github.com/flatcar-linux/init/blob/flatcar-master/bin/flatcar-install
           - /usr/local/bin/flatcar-install
+          - -v
           - -d
-          - /dev/sda
+          - '{{.boot_device}}'
           - -C
           - stable
           - -i
           - /workflow/ignition.json
       - name: reboot
         image: reboot
-        environment:
-          REGISTRY: {{.registry}}
         volumes:
-          - /var/run/docker.sock:/var/run/docker.sock
-          - /etc/docker:/etc/docker
-          - /root:/root
+          - /worker:/worker

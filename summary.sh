@@ -1,26 +1,58 @@
 #!/bin/bash
-set -euxo pipefail
+set -euo pipefail
+source /root/tink-helpers.source.sh
 
-# show summary.
+function title {
+    cat <<EOF
+
+########################################################################
+#
+# $*
+#
+
+EOF
+}
+
+# list the images in our local registry.
+# TODO why some of them do not have the $TINKERBELL_HOST_IP/tinkerbell prefix?
+title 'local repository images'
+curl -s -u "${TINKERBELL_REGISTRY_USERNAME:-admin}:${TINKERBELL_REGISTRY_PASSWORD:-Admin1234}" \
+    "https://$TINKERBELL_HOST_IP/v2/_catalog" \
+    | jq -r '.repositories[]' \
+    | while read repository; do
+        curl -s -u "${TINKERBELL_REGISTRY_USERNAME:-admin}:${TINKERBELL_REGISTRY_PASSWORD:-Admin1234}" \
+            "https://$TINKERBELL_HOST_IP/v2/$repository/tags/list" \
+            | jq -r 'select(has("tags")) | .tags[]' \
+            | while read tag; do
+                echo "$TINKERBELL_HOST_IP/$repository:$tag"
+            done
+    done
+
+# show tink resources.
+title 'tink hardware'
+tink hardware get
+
+title 'tink template'
+tink template get
+
+# TODO instead of this, show a table with:
+#       workflow id, template name, state, mac address, ip address, hostname.
+title 'tink workflow'
+tink workflow get
+
+title 'tink .env'
+cat /root/tinkerbell-sandbox/deploy/compose/.env
+
+title 'addresses'
 # e.g. inet 192.168.121.160/24 brd 192.168.121.255 scope global dynamic eth0
-# NB this gets the IP of the vagrant management interface (eth0) because its
-#    the only one accessible from the host (where libvirt is running) when
-#    we are connecting eth1 to the linux bridge.
-host_ip_address="$(ip addr show eth0 | perl -n -e'/ inet (\d+(\.\d+)+)/ && print $1')"
-cat <<EOF
+host_ip_address="$(ip addr show eth1 | perl -n -e'/ inet (\d+(\.\d+)+)/ && print $1')"
+python3 <<EOF
+from tabulate import tabulate
 
-#################################################
-#
-# tink envrc
-#
+headers = ('service', 'address', 'username', 'password')
 
-$(cat /root/tink/envrc)
+def info():
+    yield ('portainer',     'http://$host_ip_address:9000', 'admin', 'abracadabra')
 
-#################################################
-#
-# addresses
-#
-
-tink-wizard:    http://$host_ip_address:7676
-
+print(tabulate(info(), headers=headers))
 EOF

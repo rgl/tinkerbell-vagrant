@@ -14,7 +14,7 @@ The network is connected as:
 
 ![](network.png)
 
-The tp-link tl-sg108e switch is configured as:
+The tp-link tl-sg108e switch is configured with [rgl/ansible-collection-tp-link-easy-smart-switch](https://github.com/rgl/ansible-collection-tp-link-easy-smart-switch) as:
 
 ![](tp-link-sg108e-802-1q-vlan-configuration.png)
 ![](tp-link-sg108e-802-1q-vlan-pvid-configuration.png)
@@ -29,11 +29,37 @@ network:
   renderer: networkd
   ethernets:
     enp3s0:
-      dhcp4: yes
+      link-local: []
+      addresses:
+        - 10.1.0.1/24
+        - 192.168.0.254/24
+  bridges:
+    # NB this is equivalent of executing:
+    #       ip link add name br-rpi type bridge
+    #       ip addr flush dev br-rpi
+    #       ip addr add dev br-rpi 10.3.0.1/24
+    #       ip link set dev br-rpi up
+    #       ip addr ls dev br-rpi
+    #       ip -d link show dev br-rpi
+    #       ip route
+    # NB later, you can remove with:
+    #       ip link set dev br-rpi down
+    #       ip link delete dev br-rpi
+    br-rpi:
+      link-local: []
+      addresses:
+        - 10.3.0.1/24
+      interfaces:
+        - vlan.rpi
+  vlans:
+    vlan.wan:
+      id: 2
+      link: enp3s0
+      link-local: []
+      addresses:
+        - 192.168.1.1/24
+      gateway4: 192.168.1.254
       nameservers:
-        # NB on ubuntu this normally uses the system-resolved dns resolver and
-        #    you can list the current upstream dns server addresses with:
-        #       systemd-resolve --status
         addresses:
           # cloudflare+apnic public dns resolvers.
           # see https://en.wikipedia.org/wiki/1.1.1.1
@@ -43,70 +69,102 @@ network:
           # see https://en.wikipedia.org/wiki/8.8.8.8
           #- "8.8.8.8"
           #- "8.8.4.4"
-  bridges:
     # NB this is equivalent of executing:
-    #       ip link add name br-rpi type bridge
-    #       ip addr flush dev br-rpi
-    #       ip addr add dev br-rpi 10.10.10.1/24
-    #       ip link set dev br-rpi up
-    #       ip addr ls dev br-rpi
-    #       ip -d link show dev br-rpi
-    #       ip route
+    #       ip link add link enp3s0 vlan.rpi type vlan proto 802.1q id 2
+    #       ip link set dev vlan.rpi up
+    #       ip -d link show dev vlan.rpi
     # NB later, you can remove with:
-    #       ip link set dev br-rpi down
-    #       ip link delete dev br-rpi
-    br-rpi:
-      addresses:
-        - "10.10.10.1/24"
-      interfaces:
-        - vlan2
-  vlans:
-    # NB this is equivalent of executing:
-    #       ip link add link enp3s0 vlan2 type vlan proto 802.1q id 2
-    #       ip link set dev vlan2 up
-    #       ip -d link show dev vlan2
-    # NB later, you can remove with:
-    #       ip link set dev vlan2 down
-    #       ip link delete dev vlan2
-    vlan2:
-      id: 2
+    #       ip link set dev vlan.rpi down
+    #       ip link delete dev vlan.rpi
+    vlan.rpi:
+      id: 3
       link: enp3s0
+      link-local: []
 ```
 
 **NB** For more information about VLANs see the [IEEE 802.1Q VLAN Tutorial](http://www.microhowto.info/tutorials/802.1q.html).
 
 Build and install the [Ubuntu Linux base box](https://github.com/rgl/ubuntu-vagrant).
 
-After the above is in place, run `vagrant up provisioner --no-destroy-on-error` to launch the provisioner.
+After the above is in place, launch the `provisioner` with:
 
-Then launch the `bios_worker` worker with `vagrant up bios_worker --no-destroy-on-error`.
+```bash
+# NB this takes about 30m in my machine. YMMV.
+vagrant up --no-destroy-on-error --no-tty provisioner
+```
 
-You can watch the progress with:
+Enter the `provisioner` machine, and tail the relevant logs with:
 
 ```bash
 vagrant ssh provisioner
 sudo -i
-docker exec -i deploy_tink-cli_1 tink workflow list
-# NB get the workflow_id from the output of the previous workflow list command.
-workflow_id='' watch 'docker exec -i deploy_tink-cli_1 tink workflow events $workflow_id'
+cd ~/tinkerbell-sandbox/deploy/compose
+docker compose logs --follow tink-server boots nginx
+```
+
+In another terminal, launch the `bios` worker machine with:
+
+```bash
+vagrant up --no-destroy-on-error --no-tty bios
+```
+
+**NB** Alpine Linux OSIE: If the machine boots and nothing seems to happen, [workflow-helper](https://github.com/tinkerbell/osie/blob/master/apps/workflow-helper.sh) might have crashed. Login into the worker as `root` (no password needed) and check the [Alpine Linux Init System](https://wiki.alpinelinux.org/wiki/Alpine_Linux_Init_System) status with `rc-status`. If it appears as `crashed`, try to manually execute `workflow-helper` and go from there. You might also want to execute `docker images -a` and `docker ps -a`.
+
+In another terminal, watch the workflow progress with:
+
+```bash
+vagrant ssh provisioner
+sudo -i
+watch-hardware-workflows bios
 ```
 
 You should eventually see something alike:
 
 ```
-+--------------------------------------+-------------+-------------+----------------+---------------------------------+--------------------+
-| WORKER ID                            | TASK NAME   | ACTION NAME | EXECUTION TIME | MESSAGE                         |      ACTION STATUS |
-+--------------------------------------+-------------+-------------+----------------+---------------------------------+--------------------+
-| 00000000-0000-4000-8000-000000000001 | hello-world | hello-world |              0 | Started execution               | ACTION_IN_PROGRESS |
-| 00000000-0000-4000-8000-000000000001 | hello-world | hello-world |              0 | Finished Execution Successfully |     ACTION_SUCCESS |
-+--------------------------------------+-------------+-------------+----------------+---------------------------------+--------------------+
++----------------------+--------------------------------------+
+| FIELD NAME           | VALUES                               |
++----------------------+--------------------------------------+
+| Workflow ID          | dc2ff4c3-13b1-11ec-a4c5-0242ac1a0004 |
+| Workflow Progress    | 100%                                 |
+| Current Task         | hello-world                          |
+| Current Action       | info                                 |
+| Current Worker       | 00000000-0000-4000-8000-080027000001 |
+| Current Action State | STATE_SUCCESS                        |
++----------------------+--------------------------------------+
++--------------------------------------+-------------+-------------+----------------+---------------------------------+---------------+
+| WORKER ID                            | TASK NAME   | ACTION NAME | EXECUTION TIME | MESSAGE                         | ACTION STATUS |
++--------------------------------------+-------------+-------------+----------------+---------------------------------+---------------+
+| 00000000-0000-4000-8000-080027000001 | hello-world | hello-world |              0 | Started execution               | STATE_RUNNING |
+| 00000000-0000-4000-8000-080027000001 | hello-world | hello-world |              3 | finished execution successfully | STATE_SUCCESS |
+| 00000000-0000-4000-8000-080027000001 | hello-world | info        |              0 | Started execution               | STATE_RUNNING |
+| 00000000-0000-4000-8000-080027000001 | hello-world | info        |              0 | finished execution successfully | STATE_SUCCESS |
++--------------------------------------+-------------+-------------+----------------+---------------------------------+---------------+
 ```
 
-Then repeat the same procedure to launch the `uefi_worker` worker with `vagrant up uefi_worker --no-destroy-on-error`.
+**NB** After a workflow action is executed, `tink-worker` will not re-execute it, even if you reboot the worker. You must create a new workflow, e.g. `provision-workflow hello-world bios && watch-hardware-workflows bios`.
 
-See which containers are running in the provisioner vm:
+From within the worker machine, you can query the metadata endpoint:
+
+**NB** this endpoint returns the data set in the `TODO` field of the partilar worker `hardware` document.
 
 ```bash
+metadata_url="$(cat /proc/cmdline | tr ' ' '\n' | awk '/^tinkerbell=(.+)/{print "$1:50061/metadata"}')"
+wget -qO- "$metadata_url"
+```
+
+Then repeat the process with the `uefi` worker machine.
+
+To execute a more realistic workflow, you can install [Flatcar Linux](https://flatcar-linux.org) in the `bios` VM with:
+
+```bash
+provision-workflow flatcar-linux bios /dev/vda && watch-hardware-workflows bios
+```
+
+See which containers are running in the `provisioner` machine:
+
+```bash
+vagrant ssh provisioner
+sudo -i
 # see https://docs.docker.com/engine/reference/commandline/ps/#formatting
 python3 <<'EOF'
 import io
@@ -134,23 +192,64 @@ EOF
 At the time of writing these were the containers running by default:
 
 ```plain
-ContainerName               ImageName                           ImageId
---------------------------  ----------------------------------  -----------------------------------------------------------------------
-/deploy_boots_1             quay.io/tinkerbell/boots:latest     sha256:25e5bdc52d4266e5b71517089be0e41c591e2d29d9be0b3770234482af963369
-/deploy_db_1                postgres:10-alpine                  sha256:88b67a1d2cea54873a17ee1fdc085f7042a6f934a7580ca4d33356e223d5b3f3
-/deploy_hegel_1             quay.io/tinkerbell/hegel:latest     sha256:a166001107c70856d8ccfe87dcd02a014689807c8644f952ce4aa79e0d7f12ba
-/deploy_nginx_1             nginx:alpine                        sha256:7d0cdcc60a96a5124763fddf5d534d058ad7d0d8d4c3b8be2aefedf4267d0270
-/deploy_registry_1          deploy_registry                     sha256:1a4d4cca2637da9aba1a8d6fa073b1d39d1edc65a5b4da809320df282505f447
-/deploy_tink-cli_1          quay.io/tinkerbell/tink-cli:latest  sha256:6a83eb86312c55adf8646fa37082d25f380276ae76d99aadce99a9d5a4c11a17
-/deploy_tink-server_1       quay.io/tinkerbell/tink:latest      sha256:90fffc056a9d799c267f9f6093731eec0cde66a90ca1b5ce06e1623930d7a7ca
+ContainerName                        ImageName                                 ImageId
+-----------------------------------  ----------------------------------------  -----------------------------------------------------------------------
+/compose_osie-bootloader_1           nginx:alpine                              sha256:513f9a9d8748b25cdb0ec6f16b4523af7bba216a6bf0f43f70af75b4cf7cb780
+/compose_registry-ca-crt-download_1  alpine                                    sha256:14119a10abf4669e8cdbdff324a9f9605d99697215a0d21c360fe8dfa8471bab
+/compose_hegel_1                     quay.io/tinkerbell/hegel:sha-9f5da0a8     sha256:1e32a53ea16153ac9c7b6f0eea4aa8956f748ed710d8b926b9257221e794c3b8
+/compose_tink-cli_1                  quay.io/tinkerbell/tink-cli:sha-8ea8a0e5  sha256:c67d5bdf2f1dc5a7eebe1e31a73abe46c28bdafc11ead079688d94253c836ceb
+/compose_boots_1                     quay.io/tinkerbell/boots:sha-94f43947     sha256:dbebee7b9680a291045eec5c38106bed47d68434b3f9486911af7c5f3011dcde
+/compose_images-to-local-registry_1  quay.io/containers/skopeo:latest          sha256:4044537125418d051209b3f38c4a157cd77b6d0b39d7678f67110a76f991032b
+/compose_tink-server_1               quay.io/tinkerbell/tink:sha-8ea8a0e5      sha256:7231517852e13257353e65ebe58d66eb949ecad5890188b7e050188e7ea05a7d
+/compose_registry_1                  registry:2.7.1                            sha256:b2cb11db9d3d60af38d9d6841d3b8b053e5972c0b7e4e6351e9ea4374ed37d8c
+/compose_tls-gen_1                   cfssl/cfssl                               sha256:655abf144edde793a3ff1bc883cc82ca61411efb35d0d403a52f202c9c3cd377
+/compose_tink-server-migration_1     quay.io/tinkerbell/tink:sha-8ea8a0e5      sha256:7231517852e13257353e65ebe58d66eb949ecad5890188b7e050188e7ea05a7d
+/compose_registry-auth_1             httpd:2                                   sha256:f34528d8e714f1b877711deafec0d957394a86987cbba54d924bc0a6e517a7ac
+/compose_db_1                        postgres:10-alpine                        sha256:17ec9988ae216f69d9e6528aae17a9fce29a2b7951313de9a34802528116f2eb
+/compose_osie-work_1                 bash:4.4                                  sha256:e9ae8cfa6bbca7b9790ab5ea66d619e3cf9df5d037f8969980d96193eef0a198
 ```
 
-Those containers were started with docker-compose and you can use it to
+Those containers were started with docker compose and you can use it to
 inspect the tinkerbell containers:
 
 ```bash
-source /root/tink/envrc
-docker-compose -f /root/tink/deploy/docker-compose.yml ps
+vagrant ssh provisioner
+sudo -i
+cd ~/tinkerbell-sandbox/deploy/compose
+docker compose ps
+docker compose logs -f
+```
+
+You can also use the [Portainer](https://github.com/portainer/portainer)
+application at the address that is displayed after the vagrant environment
+is launched (e.g. at `http://10.3.0.2:9000`).
+
+# Tinkerbell Hook
+
+This vagrant environment uses the [linuxkit based hook osie](https://github.com/tinkerbell/hook)
+instead of the [alpine linux based osie](https://github.com/tinkerbell/osie).
+
+In the osie you can execute the following troubleshooting commands:
+
+```bash
+alias l='ls -lF'
+alias ll='l -a'
+alias ctr='ctr -n services.linuxkit'
+alias docker='ctr tasks exec --tty --exec-id shell docker docker'
+
+# list the containers.
+ctr containers ls
+
+# list the tasks that are actually running in the containers.
+ctr tasks ls
+
+# list the processes running in the (tink-)docker container.
+ctr task ps docker
+
+# list the downloaded images and docker containers.
+# NB to troubleshoot check the containers logs with docker logs.
+docker images -a
+docker ps -a
 ```
 
 # Raspberry Pi
@@ -201,7 +300,7 @@ vagrant ssh-config provisioner >tmp/provisioner-ssh-config.conf
 wireshark -k -i <(ssh -F tmp/provisioner-ssh-config.conf provisioner 'sudo tcpdump -s 0 -U -n -i eth1 -w - not tcp port 22')
 ```
 
-You can also do it from the host by capturing traffic from the `br-rpi` or `vlan2` interface.
+You can also do it from the host by capturing traffic from the `br-rpi` or `vlan.rpi` interface.
 
 ## Database
 
@@ -211,11 +310,11 @@ PostgreSQL database, you can access its console with, e.g.:
 ```bash
 vagrant ssh provisioner
 sudo -i
-docker exec -i deploy_db_1 psql -U tinkerbell -c '\dt'
-docker exec -i deploy_db_1 psql -U tinkerbell -c '\d hardware'
-docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from template'
-docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from workflow'
-docker exec -i deploy_db_1 psql -U tinkerbell -c 'select * from workflow_event order by created_at desc'
+docker exec -i compose_db_1 psql -U tinkerbell -c '\dt'
+docker exec -i compose_db_1 psql -U tinkerbell -c '\d hardware'
+docker exec -i compose_db_1 psql -U tinkerbell -c 'select * from template'
+docker exec -i compose_db_1 psql -U tinkerbell -c 'select * from workflow'
+docker exec -i compose_db_1 psql -U tinkerbell -c 'select * from workflow_event order by created_at desc'
 ```
 
 # Notes

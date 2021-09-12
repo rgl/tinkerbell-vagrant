@@ -1,23 +1,13 @@
 # configure the virtual machines network to use an already configured bridge.
 # NB this must be used for connecting to the external switch.
 $provisioner_bridge_name = 'br-rpi'
-$provisioner_ip_address = '10.10.10.2'
+$provisioner_ip_address = '10.3.0.2'
 
 # uncomment the next two lines to configure the virtual machines network
 # to use a new private network that is only available inside the host.
 # NB this must be used for NOT connecting to the external switch.
 #$provisioner_bridge_name = nil
 #$provisioner_ip_address = '10.11.12.2'
-
-# see https://github.com/tinkerbell/tink
-# NB although we are installing from a version, the setup.sh script
-#    that we download from the tink repo still uses some unversioned
-#    dependencies.
-$tinkerbell_version = '4e59b92cdafcd964e5a07a08df455c0b384c5782' # 2020-06-23T07:01:32Z
-
-# docker(-compose) versions.
-$docker_version = '5:19.03.11~3-0~ubuntu-focal' # NB execute apt-cache madison docker-ce to known the available versions.
-$docker_compose_version = '1.26.0'              # see https://github.com/docker/compose/releases
 
 # to make sure the nodes are created sequentially, we
 # have to force a --no-parallel execution.
@@ -32,7 +22,7 @@ Vagrant.configure('2') do |config|
     lv.cpu_mode = 'host-passthrough'
     # lv.nested = true
     lv.keymap = 'pt'
-    config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: 4, nfs_udp: false
+    config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
   end
 
   config.vm.define :provisioner do |config|
@@ -40,8 +30,10 @@ Vagrant.configure('2') do |config|
     if $provisioner_bridge_name
       config.vm.network :public_network,
         ip: $provisioner_ip_address,
-        dev: $provisioner_bridge_name
-    else
+        dev: $provisioner_bridge_name,
+        mode: 'bridge',
+        type: 'bridge'
+  else
       config.vm.network :private_network,
         ip: $provisioner_ip_address,
         libvirt__dhcp_enabled: false,
@@ -64,19 +56,24 @@ done
       }
     end
     config.vm.provision :shell, path: 'provision-base.sh'
-    config.vm.provision :shell, path: 'provision-tinkerbell-dependencies.sh', args: [$docker_version, $docker_compose_version]
-    config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address, $tinkerbell_version]
-    config.vm.provision :shell, name: 'Ensure tinkerbell is running', path: 'start-tinkerbell.sh', run: 'always'
+    config.vm.provision :shell, path: 'provision-docker.sh'
+    config.vm.provision :shell, path: 'provision-docker-compose.sh'
+    config.vm.provision :shell, path: 'provision-portainer.sh'
+    config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address]
+    config.vm.provision :shell, path: 'templates/provision.sh'
+    config.vm.provision :shell, path: 'workers/provision.sh'
     config.vm.provision :shell, name: 'Summary', path: 'summary.sh', run: 'always'
   end
 
   ['bios', 'uefi'].each_with_index do |firmware, i|
-    config.vm.define "#{firmware}_worker" do |config|
+    config.vm.define firmware do |config|
       config.vm.box = nil
       if $provisioner_bridge_name
         config.vm.network :public_network,
           dev: $provisioner_bridge_name,
           mac: "08002700000#{i+1}",
+          mode: 'bridge',
+          type: 'bridge',
           auto_config: false
       else
         config.vm.network :private_network,
@@ -89,9 +86,15 @@ done
       end
       config.vm.provider :libvirt do |lv, config|
         lv.loader = '/usr/share/ovmf/OVMF.fd' if firmware == 'uefi'
-        lv.memory = 1*1024
+        lv.memory = 4*1024
+        # TODO when https://github.com/tinkerbell/hook/issues/84 is fixed, switch the bus to scsi.
+        lv.storage :file, :size => '40G', :bus => 'virtio', :discard => 'unmap', :cache => 'unsafe'
+        lv.boot 'hd'
         lv.boot 'network'
         lv.mgmt_attach = false
+        lv.random :model => 'random'
+        lv.graphics_type = 'spice'
+        lv.video_type = 'virtio'
         # set some BIOS settings that will help us identify this particular machine.
         #
         #   QEMU                | Linux

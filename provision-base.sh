@@ -48,8 +48,10 @@ EOF
 #
 # configure the shell.
 
+cp /vagrant/tink-helpers.source.sh /root
+
 cat >/etc/profile.d/login.sh <<'EOF'
-[[ "$-" != *i* ]] && return
+[[ "$-" != *i* ]] && return # bail when not running interactively.
 export EDITOR=vim
 export PAGER=less
 alias l='ls -lF --color'
@@ -69,10 +71,14 @@ set completion-ignore-case on
 "\eOC": forward-word
 EOF
 
+cat >~/.bash_aliases <<'EOF'
+source ~/tink-helpers.source.sh
+EOF
+
 cat >~/.bash_history <<'EOF'
 etherwake -i eth1 c0:3f:d5:6c:b7:5a
-docker exec -i deploy_tink-cli_1 tink workflow list
-workflow_id=''; watch "docker exec -i deploy_tink-cli_1 tink workflow events $workflow_id"
+provision-workflow hello-world rpi1 && watch-hardware-workflows rpi1
+watch-hardware-workflows rpi1
 ssh pi@rpi1.test
 ansible -f 10 -b -m command -a 'vcgencmd measure_temp' cluster
 source /opt/ansible/bin/activate && cd /home/vagrant/rpi-cluster
@@ -148,7 +154,17 @@ rpcinfo -t localhost nfs 4
 # provision useful tools.
 
 apt-get install -y jq jo
+apt-get install -y curl
+apt-get install -y httpie
+apt-get install -y unzip
 apt-get install -y python3-tabulate
+apt-get install -y --no-install-recommends git
+apt-get install -y make patch
+
+# install yq.
+wget -qO- https://github.com/mikefarah/yq/releases/download/v4.12.2/yq_linux_amd64.tar.gz | tar xz
+install yq_linux_amd64 /usr/local/bin/yq
+rm yq_linux_amd64
 
 # etherwake lets us power-on a machine by sending a Wake-on-LAN (WOL)
 # magic packet to its ethernet card.
