@@ -52,6 +52,7 @@ from tabulate import tabulate
 headers = ('service', 'address', 'username', 'password')
 
 def info():
+    yield ('meshcommander', 'http://$host_ip_address:4000', None, None)
     yield ('portainer',     'http://$host_ip_address:9000', 'admin', 'abracadabra')
 
 print(tabulate(info(), headers=headers))

@@ -59,6 +59,7 @@ done
     config.vm.provision :shell, path: 'provision-docker.sh'
     config.vm.provision :shell, path: 'provision-docker-compose.sh'
     config.vm.provision :shell, path: 'provision-portainer.sh'
+    config.vm.provision :shell, path: 'provision-meshcommander.sh'
     config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address]
     config.vm.provision :shell, path: 'templates/provision.sh'
     config.vm.provision :shell, path: 'workers/provision.sh'
