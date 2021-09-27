@@ -32,6 +32,7 @@ Vagrant.configure('2') do |config|
     lv.disk_device = 'sda'
     lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
+    config.vm.synced_folder "#{ENV['HOME']}/.vagrant.d/boxes", '/vagrant-boxes', mount_options: ['ro'], type: 'nfs', nfs_version: '4.2', nfs_udp: false
     config.trigger.before :'VagrantPlugins::ProviderLibvirt::Action::StartDomain', type: :action do |trigger|
       trigger.ruby do |env, machine|
         # modify the scsi controller model to virtio-scsi.

@@ -142,6 +142,7 @@ apt-get install -y unzip
 apt-get install -y python3-tabulate python3-pem
 apt-get install -y --no-install-recommends git
 apt-get install -y make patch
+apt-get install -y qemu-utils
 
 # install yq.
 wget -qO- https://github.com/mikefarah/yq/releases/download/v4.12.2/yq_linux_amd64.tar.gz | tar xz
@@ -152,3 +153,16 @@ rm yq_linux_amd64
 # magic packet to its ethernet card.
 # e.g. etherwake -i eth1 c0:3f:d5:6c:b7:5a
 apt-get install -y etherwake
+
+# install clonezilla.
+apt-get install -y --no-install-recommends clonezilla partclone zstd
+
+# configure the system to automatically load nbd.
+# NB this is required to use qemu-nbd.
+cat >/etc/modules-load.d/nbd.conf <<'EOF'
+nbd
+EOF
+cat >/etc/modprobe.d/nbd.conf <<'EOF'
+options nbd max_part=8
+EOF
+modprobe nbd

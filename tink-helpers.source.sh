@@ -1,5 +1,7 @@
 source ~/tinkerbell-sandbox/deploy/compose/.env
 
+TINKERBELL_STATE_WEBROOT_PATH="$HOME/tinkerbell-sandbox/deploy/compose/state/webroot"
+
 function tink {
   # NB its unfortunate that this will output the following to stderr:
   #       Flag based client configuration failed with err: fetch cert: Get "http://127.0.0.1:42114/cert"
@@ -77,4 +79,64 @@ echo \"$workflow_ids\" | while read workflow_id; do
   docker exec -i compose_tink-cli_1 tink workflow events \$workflow_id
 done
 "
+}
+
+function install-vagrant-box-clonezilla-image {
+  local VAGRANT_BOX_IMAGE_PATH=/vagrant-boxes/$1/0/libvirt/box.img
+  local CLONEZILLA_IMAGE_NAME=$2
+  local CLONEZILLA_IMAGE_PATH=/vagrant/tmp/$CLONEZILLA_IMAGE_NAME
+
+  if [ ! -f "$VAGRANT_BOX_IMAGE_PATH" ]; then
+    echo "WARNING: $VAGRANT_BOX_IMAGE_PATH does not exist. skipping creating the $CLONEZILLA_IMAGE_NAME image."
+    exit 0
+  fi
+
+  # convert the vagrant box to a clonezilla image.
+  if [ ! -f "$CLONEZILLA_IMAGE_PATH/SHA1SUMS" ] || [ "$VAGRANT_BOX_IMAGE_PATH" -nt "$CLONEZILLA_IMAGE_PATH/SHA1SUMS" ]; then
+    qemu-img info $VAGRANT_BOX_IMAGE_PATH
+    qemu-nbd --read-only --connect /dev/nbd0 $VAGRANT_BOX_IMAGE_PATH
+    parted --script /dev/nbd0 print
+    rm -rf $CLONEZILLA_IMAGE_PATH
+    ocs-sr \
+      --batch \
+      --nogui \
+      --ocsroot /vagrant/tmp \
+      --use-partclone \
+      --clone-hidden-data \
+      --pzstd-compress \
+      --skip-check-restorable \
+      --gen-sha1sum \
+      savedisk \
+      $CLONEZILLA_IMAGE_NAME \
+      nbd0
+    qemu-nbd --disconnect /dev/nbd0
+    du -h $CLONEZILLA_IMAGE_PATH
+  fi
+
+  # you can restore the image with:
+  # qemu-img create -f qcow2 $CLONEZILLA_IMAGE_PATH-test.qcow2 60G
+  # qemu-img info $CLONEZILLA_IMAGE_PATH-test.qcow2
+  # qemu-nbd --connect /dev/nbd1 $CLONEZILLA_IMAGE_PATH-test.qcow2
+  # ocs-sr \
+  #   --batch \
+  #   --nogui \
+  #   --ocsroot /vagrant/tmp \
+  #   --skip-check-restorable-r \
+  #   --check-sha1sum \
+  #   restoredisk \
+  #   $CLONEZILLA_IMAGE_NAME \
+  #   nbd1
+  # parted --script /dev/nbd1 print
+  # qemu-nbd --disconnect /dev/nbd1
+
+  # copy the clonezilla image to the tinkerbell webroot.
+  install -d "$TINKERBELL_STATE_WEBROOT_PATH/images"
+  rsync \
+    --archive \
+    --no-owner \
+    --no-group \
+    --chmod Du=rwx,Dg=rx,Do=rx,Fu=rw,Fg=r,Fo=r \
+    --delete \
+    $CLONEZILLA_IMAGE_PATH \
+    "$TINKERBELL_STATE_WEBROOT_PATH/images"
 }
