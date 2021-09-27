@@ -9,7 +9,8 @@ RUN apt-get update && \
         gpg \
         udev \
         wget \
-        parted
+        parted && \
+    rm -rf /var/lib/apt/lists/*
 
 # TODO have everything inside this container and do not go to the internet when installing flatcar?
 #      NOPE instead we should mirror everything because the container will be
