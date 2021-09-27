@@ -84,9 +84,14 @@ network:
 
 **NB** For more information about VLANs see the [IEEE 802.1Q VLAN Tutorial](http://www.microhowto.info/tutorials/802.1q.html).
 
-Build and install the [Ubuntu Linux base box](https://github.com/rgl/ubuntu-vagrant).
+Build and install the [Ubuntu Linux vagrant box](https://github.com/rgl/ubuntu-vagrant).
 
-After the above is in place, launch the `provisioner` with:
+Optionally, build and install the following vagrant boxes (which must be using
+the UEFI variant):
+
+* [Debian](https://github.com/rgl/debian-vagrant)
+
+Launch the `provisioner` with:
 
 ```bash
 # NB this takes about 30m in my machine. YMMV.
@@ -157,6 +162,7 @@ Then repeat the process with the `uefi` worker machine.
 To execute a more realistic workflow, you can install one of the following:
 
 ```bash
+provision-workflow debian        uefi && watch-hardware-workflows uefi
 provision-workflow flatcar-linux uefi && watch-hardware-workflows uefi
 ```
 
