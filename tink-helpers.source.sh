@@ -1,6 +1,11 @@
 source ~/tinkerbell-sandbox/deploy/compose/.env
 
 function tink {
+  # NB its unfortunate that this will output the following to stderr:
+  #       Flag based client configuration failed with err: fetch cert: Get "http://127.0.0.1:42114/cert"
+  #    but there is no universal workaround for it... we have to wait
+  #    for an upstream fix.
+  # see https://github.com/tinkerbell/tink/issues/524
   docker exec -i compose_tink-cli_1 tink "$@"
 }
 
