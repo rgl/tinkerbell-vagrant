@@ -15,14 +15,7 @@ function provision-workflow {
 
 function delete-template {
   local template_name="$1"
-  # tink template get returns:
-  #   +--------------------------------------+---------------+----------------------+----------------------+
-  #   | ID                                   | NAME          | CREATED AT           | UPDATED AT           |
-  #   +--------------------------------------+---------------+----------------------+----------------------+
-  #   | 073170d1-bd83-11eb-a883-0242ac120005 | flatcar-linux | 2021-05-25T22:00:02Z | 2021-05-25T22:00:02Z |
-  #   +--------------------------------------+---------------+----------------------+----------------------+
-  #     $2                                     $3              $4                     $5
-  tink template get | tr -d ' ' | awk -F '|' "/\|$template_name\|/{print \$2}" | while read template_id; do
+  tink template get --format json | jq -r --arg name "$template_name" '.data[] | select(.name==$name) | .id' | while read template_id; do
     tink template delete "$template_id"
   done
 }
