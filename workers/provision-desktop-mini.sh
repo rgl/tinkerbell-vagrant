@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euxo pipefail
-source /root/tink-helpers.source.sh
+source /vagrant/tink-helpers.source.sh
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
 

@@ -48,8 +48,6 @@ EOF
 #
 # configure the shell.
 
-cp /vagrant/tink-helpers.source.sh /root
-
 cat >/etc/profile.d/login.sh <<'EOF'
 [[ "$-" != *i* ]] && return # bail when not running interactively.
 export EDITOR=vim
@@ -72,7 +70,7 @@ set completion-ignore-case on
 EOF
 
 cat >~/.bash_aliases <<'EOF'
-source ~/tink-helpers.source.sh
+source /vagrant/tink-helpers.source.sh
 EOF
 
 cat >~/.bash_history <<'EOF'

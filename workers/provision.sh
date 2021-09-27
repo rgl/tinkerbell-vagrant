@@ -6,5 +6,5 @@ bash provision-virtual.sh
 bash provision-nuc.sh
 bash provision-desktop-mini.sh
 
-source /root/tink-helpers.source.sh
+source /vagrant/tink-helpers.source.sh
 tink hardware get

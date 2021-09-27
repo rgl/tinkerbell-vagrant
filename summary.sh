@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-source /root/tink-helpers.source.sh
+source /vagrant/tink-helpers.source.sh
 
 function title {
     cat <<EOF

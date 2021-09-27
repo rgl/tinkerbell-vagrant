@@ -5,5 +5,5 @@ cd /vagrant/templates
 bash hello-world/provision.sh
 bash flatcar-linux/provision.sh
 
-source /root/tink-helpers.source.sh
+source /vagrant/tink-helpers.source.sh
 tink template get
