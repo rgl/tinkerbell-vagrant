@@ -16,8 +16,8 @@ export DEBIAN_FRONTEND=noninteractive
 #   # this way you can just see the values needed for debconf-set-selections:
 #   sudo debconf-get-selections | grep -E '^grub-pc.+\s+' | sort
 debconf-set-selections <<EOF
-grub-pc	grub-pc/install_devices_disks_changed	multiselect	/dev/vda
-grub-pc	grub-pc/install_devices	multiselect	/dev/vda
+grub-pc	grub-pc/install_devices_disks_changed	multiselect	/dev/sda
+grub-pc	grub-pc/install_devices	multiselect	/dev/sda
 EOF
 
 # upgrade the system.

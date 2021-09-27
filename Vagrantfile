@@ -13,6 +13,12 @@ $provisioner_ip_address = '10.3.0.2'
 # have to force a --no-parallel execution.
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 
+# enable typed triggers.
+# NB this is needed to modify the libvirt domain scsi controller model to virtio-scsi.
+ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
+
+require 'open3'
+
 Vagrant.configure('2') do |config|
   config.vm.box = 'ubuntu-20.04-amd64'
 
@@ -22,7 +28,24 @@ Vagrant.configure('2') do |config|
     lv.cpu_mode = 'host-passthrough'
     # lv.nested = true
     lv.keymap = 'pt'
+    lv.disk_bus = 'scsi'
+    lv.disk_device = 'sda'
+    lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
+    config.trigger.before :'VagrantPlugins::ProviderLibvirt::Action::StartDomain', type: :action do |trigger|
+      trigger.ruby do |env, machine|
+        # modify the scsi controller model to virtio-scsi.
+        # see https://github.com/vagrant-libvirt/vagrant-libvirt/pull/692
+        # see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/999
+        stdout, stderr, status = Open3.capture3(
+          'virt-xml', machine.id,
+          '--edit', 'type=scsi',
+          '--controller', 'model=virtio-scsi')
+        if status.exitstatus != 0
+          raise "failed to run virt-xml to modify the scsi controller model. status=#{status.exitstatus} stdout=#{stdout} stderr=#{stderr}"
+        end
+      end
+    end
   end
 
   config.vm.define :provisioner do |config|
@@ -33,7 +56,7 @@ Vagrant.configure('2') do |config|
         dev: $provisioner_bridge_name,
         mode: 'bridge',
         type: 'bridge'
-  else
+    else
       config.vm.network :private_network,
         ip: $provisioner_ip_address,
         libvirt__dhcp_enabled: false,
@@ -88,8 +111,6 @@ done
       config.vm.provider :libvirt do |lv, config|
         lv.loader = '/usr/share/ovmf/OVMF.fd' if firmware == 'uefi'
         lv.memory = 4*1024
-        # TODO when https://github.com/tinkerbell/hook/issues/84 is fixed, switch the bus to scsi.
-        lv.storage :file, :size => '40G', :bus => 'virtio', :discard => 'unmap', :cache => 'unsafe'
         lv.boot 'hd'
         lv.boot 'network'
         lv.mgmt_attach = false
@@ -127,6 +148,7 @@ done
           lv.qemuargs :value => '-smbios'
           lv.qemuargs :value => value
         end
+        lv.storage :file, :size => '65G', :device => 'sda', :bus => 'scsi', :discard => 'unmap', :detect_zeroes => 'unmap', :cache => 'unsafe'
       end
     end
   end
