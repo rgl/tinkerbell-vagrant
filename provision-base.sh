@@ -139,7 +139,7 @@ apt-get install -y jq jo
 apt-get install -y curl
 apt-get install -y httpie
 apt-get install -y unzip
-apt-get install -y python3-tabulate
+apt-get install -y python3-tabulate python3-pem
 apt-get install -y --no-install-recommends git
 apt-get install -y make patch
 
