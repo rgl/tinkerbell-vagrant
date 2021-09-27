@@ -102,10 +102,10 @@ cd ~/tinkerbell-sandbox/deploy/compose
 docker compose logs --follow tink-server boots nginx
 ```
 
-In another terminal, launch the `bios` worker machine with:
+In another terminal, launch the `uefi` worker machine with:
 
 ```bash
-vagrant up --no-destroy-on-error --no-tty bios
+vagrant up --no-destroy-on-error --no-tty uefi
 ```
 
 **NB** Alpine Linux OSIE: If the machine boots and nothing seems to happen, [workflow-helper](https://github.com/tinkerbell/osie/blob/master/apps/workflow-helper.sh) might have crashed. Login into the worker as `root` (no password needed) and check the [Alpine Linux Init System](https://wiki.alpinelinux.org/wiki/Alpine_Linux_Init_System) status with `rc-status`. If it appears as `crashed`, try to manually execute `workflow-helper` and go from there. You might also want to execute `docker images -a` and `docker ps -a`.
@@ -115,7 +115,7 @@ In another terminal, watch the workflow progress with:
 ```bash
 vagrant ssh provisioner
 sudo -i
-watch-hardware-workflows bios
+watch-hardware-workflows uefi
 ```
 
 You should eventually see something alike:
@@ -141,7 +141,7 @@ You should eventually see something alike:
 +--------------------------------------+-------------+-------------+----------------+---------------------------------+---------------+
 ```
 
-**NB** After a workflow action is executed, `tink-worker` will not re-execute it, even if you reboot the worker. You must create a new workflow, e.g. `provision-workflow hello-world bios && watch-hardware-workflows bios`.
+**NB** After a workflow action is executed, `tink-worker` will not re-execute it, even if you reboot the worker. You must create a new workflow, e.g. `provision-workflow hello-world uefi && watch-hardware-workflows uefi`.
 
 From within the worker machine, you can query the metadata endpoint:
 
@@ -154,10 +154,10 @@ wget -qO- "$metadata_url"
 
 Then repeat the process with the `uefi` worker machine.
 
-To execute a more realistic workflow, you can install [Flatcar Linux](https://flatcar-linux.org) in the `bios` VM with:
+To execute a more realistic workflow, you can install one of the following:
 
 ```bash
-provision-workflow flatcar-linux bios /dev/vda && watch-hardware-workflows bios
+provision-workflow flatcar-linux uefi && watch-hardware-workflows uefi
 ```
 
 See which containers are running in the `provisioner` machine:

@@ -4,29 +4,30 @@ global_timeout: 1800
 tasks:
   - name: flatcar-install
     worker: '{{.device_1}}'
+    volumes:
+      - /dev:/dev
+      - /sys/firmware/efi/efivars:/sys/firmware/efi/efivars
+      - /worker:/worker
     actions:
+      - name: reset-uefi-boot
+        image: reset-uefi-boot
       - name: create-ignition
         image: flatcar-install
         command:
           - sh
           - -c
           - echo '{{.ignition}}' | base64 -d >/workflow/ignition.json
-      - name: install
+      - name: install-os
         image: flatcar-install
-        volumes:
-          - /dev:/dev
-        #  - /sys/firmware/efi/efivars:/sys/firmware/efi/efivars
         command:
-          # TODO mount -o remount,rw /sys/firmware/efi/efivars
-          #      then we can execute efibootmgr --bootorder 0005 # 0005 in my case was the SATA disk.
-          #      NB partx --show /dev/sda
-          #      NB sda1 is the EFI-SYSTEM partition.
-          #      NB sda2 is the BIOS-BOOT partition.
-          #      NB sda3 is the USR-A partition.
-          #      NB sda4 is the USR-B partition.
-          #      NB sda6 is the OEM partition (ignition is stored here as config.ign)
-          #      NB sda7 is the OEM-CONFIG partition.
-          #      NB sda9 is the ROOT partition.
+          # NB flatcar-linux partitions the disk as (partx --show /dev/sda):
+          #      sda1: EFI-SYSTEM
+          #      sda2: BIOS-BOOT
+          #      sda3: USR-A
+          #      sda4: USR-B
+          #      sda6: OEM (ignition is stored here as config.ign)
+          #      sda7: OEM-CONFIG
+          #      sda9: ROOT
           # see https://docs.flatcar-linux.org/os/installing-to-disk/
           # see https://github.com/flatcar-linux/docs/blob/master/os/installing-to-disk.md
           # see https://github.com/flatcar-linux/init/blob/flatcar-master/bin/flatcar-install
@@ -40,5 +41,3 @@ tasks:
           - /workflow/ignition.json
       - name: reboot
         image: reboot
-        volumes:
-          - /worker:/worker
