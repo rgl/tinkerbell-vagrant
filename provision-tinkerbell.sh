@@ -6,6 +6,7 @@ provisioner_ip_address="${1:-10.3.0.2}"; shift || true
 
 # install tinkerbell.
 # see https://docs.tinkerbell.org/setup/on-bare-metal-with-docker/
+# see https://github.com/tinkerbell/sandbox
 # see https://github.com/rgl/tinkerbell-tink
 tinkerbell_repository='https://github.com/tinkerbell/sandbox.git'
 tinkerbell_version='41cc30f01c5c53a306f6ca86d426147edd00aff0' # 2021-09-08T16:38:30Z
@@ -28,7 +29,15 @@ docker compose up --quiet-pull --detach registry
 # NB we must restart docker before we start tinkerbell, as we cannot interrupt
 #    the images-to-local-registry service before it finishes.
 source .env
-docker compose cp registry:/certs/onprem/bundle.pem /usr/local/share/ca-certificates/tinkerbell.crt
+docker compose cp registry:/certs/onprem/bundle.pem /tmp/bundle.pem
+python3 >/usr/local/share/ca-certificates/tinkerbell.crt <<'EOF'
+import sys
+import pem
+
+# extract the ca certificate from the bundle.
+certificates = pem.parse_file('/tmp/bundle.pem')
+print(certificates[-1])
+EOF
 update-ca-certificates
 systemctl restart docker
 docker login $TINKERBELL_HOST_IP --username admin --password-stdin <<EOF
