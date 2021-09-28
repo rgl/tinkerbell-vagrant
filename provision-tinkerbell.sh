@@ -9,7 +9,7 @@ provisioner_ip_address="${1:-10.3.0.2}"; shift || true
 # see https://github.com/tinkerbell/sandbox
 # see https://github.com/rgl/tinkerbell-tink
 tinkerbell_repository='https://github.com/tinkerbell/sandbox.git'
-tinkerbell_version='41cc30f01c5c53a306f6ca86d426147edd00aff0' # 2021-09-08T16:38:30Z
+tinkerbell_version='8256ad1e8515c2a97a27091c0f5c12e42f083748' # 2021-09-20T15:37:22Z
 cd ~
 git clone --no-checkout $tinkerbell_repository tinkerbell-sandbox
 cd tinkerbell-sandbox
@@ -19,7 +19,6 @@ sed -i -E "s,(TINKERBELL_HOST_IP)=.*,\\1=$provisioner_ip_address,g" .env
 yq eval --inplace 'del(.services.create-tink-records)' docker-compose.yml
 yq eval --inplace 'del(.services.ubuntu-image-setup)' docker-compose.yml
 yq eval --inplace 'del(.services.osie-bootloader.depends_on.ubuntu-image-setup)' docker-compose.yml
-yq eval --inplace '.services.hegel.ports[0] = "50061:50061/tcp"' docker-compose.yml
 yq eval --inplace '.services.osie-bootloader.volumes += ["./osie-bootloader/nginx-templates:/etc/nginx/templates:ro"]' docker-compose.yml
 install -d osie-bootloader/nginx-templates
 # NB autoindex is required by httpdirfs to mount an http filesystem.
