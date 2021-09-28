@@ -31,6 +31,10 @@ Vagrant.configure('2') do |config|
     lv.disk_bus = 'scsi'
     lv.disk_device = 'sda'
     lv.disk_driver :discard => 'unmap', :cache => 'unsafe'
+    # NB vagrant-libvirt does not yet support urandom; but since tinkerbell
+    #    built iPXE takes too much time to leave the "Initialising devices"
+    #    phase we modify this to urandom in the trigger bellow.
+    lv.random :model => 'random'
     config.vm.synced_folder '.', '/vagrant', type: 'nfs', nfs_version: '4.2', nfs_udp: false
     config.vm.synced_folder "#{ENV['HOME']}/.vagrant.d/boxes", '/vagrant-boxes', mount_options: ['ro'], type: 'nfs', nfs_version: '4.2', nfs_udp: false
     config.trigger.before :'VagrantPlugins::ProviderLibvirt::Action::StartDomain', type: :action do |trigger|
@@ -44,6 +48,14 @@ Vagrant.configure('2') do |config|
           '--controller', 'model=virtio-scsi')
         if status.exitstatus != 0
           raise "failed to run virt-xml to modify the scsi controller model. status=#{status.exitstatus} stdout=#{stdout} stderr=#{stderr}"
+        end
+        # modify the random model to use the urandom backend device.
+        stdout, stderr, status = Open3.capture3(
+          'virt-xml', machine.id,
+          '--edit',
+          '--rng', '/dev/urandom')
+        if status.exitstatus != 0
+          raise "failed to run virt-xml to modify the random backend device. status=#{status.exitstatus} stdout=#{stdout} stderr=#{stderr}"
         end
       end
     end
@@ -117,7 +129,6 @@ done
         lv.boot 'hd'
         lv.boot 'network'
         lv.mgmt_attach = false
-        #lv.random :model => 'random' # NB this makes the tinkerbell built iPXE to take too much time to leave the "Initialising devices" phase.
         lv.graphics_type = 'spice'
         lv.video_type = 'qxl'
         lv.input :type => 'tablet', :bus => 'usb'
