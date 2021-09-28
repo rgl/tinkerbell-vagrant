@@ -13,6 +13,9 @@ docker run \
   -v portainer_data:/data \
   portainer/portainer-ce:$portainer_version
 
+# wait for portainer to be ready.
+while [ -z "$(http --ignore-stdin localhost:9000/api/status | jq -r .Version)" ]; do sleep 3; done
+
 # add the docker endpoint.
 # see https://documentation.portainer.io/api/
 http \
