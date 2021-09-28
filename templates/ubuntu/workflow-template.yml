@@ -1,0 +1,30 @@
+version: "0.1"
+name: ubuntu
+global_timeout: 1800
+tasks:
+  - name: ubuntu-install
+    worker: '{{.device_1}}'
+    volumes:
+      - /dev:/dev
+      - /sys/firmware/efi/efivars:/sys/firmware/efi/efivars
+      - /worker:/worker
+    actions:
+      - name: install-os
+        image: clonezilla-restoredisk
+        environment:
+          IMG_URL: '{{.img_url}}'
+          DEST_DEVICE: '{{.boot_device}}'
+      # NB clonezilla-restoredisk erases all the uefi boot options.
+      # NB if we do not set any boot option, the firmware will recover/discover
+      #    them at the next boot. unfortunately, in my test HP EliteDesk 800
+      #    35W G2 Desktop Mini, this requires an extra reboot, which messes with
+      #    the ethernet speed by switching it to 10 Mbps when I'm using the AMT
+      #    Remote Desktop.
+      - name: install-bootloader
+        image: reset-uefi-boot
+        environment:
+          BOOT_DEVICE: '{{.boot_device}}'
+          UEFI_DEVICE: '{{.boot_device}}2'
+          ROOT_DEVICE: '{{.boot_device}}3'
+      - name: reboot
+        image: reboot
