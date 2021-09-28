@@ -649,7 +649,7 @@ r2=http/tcp/10.3.0.3:80
       <h>120</h>
     </coordinates>
     <panel_attributes>&lt;&lt;vm&gt;&gt;
-name: bios_worker
+name: bios
 id: 00000000-0000-4000-8000-000000000001
 mac: 08:00:27:00:00:01
 eth0 ip: 10.3.0.11
@@ -676,7 +676,7 @@ firmware: bios</panel_attributes>
       <h>120</h>
     </coordinates>
     <panel_attributes>&lt;&lt;vm&gt;&gt;
-name: uefi_worker
+name: uefi
 id: 00000000-0000-4000-8000-000000000002
 mac: 08:00:27:00:00:02
 eth0 ip: 10.3.0.12
