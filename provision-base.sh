@@ -74,6 +74,8 @@ source /vagrant/tink-helpers.source.sh
 EOF
 
 cat >~/.bash_history <<'EOF'
+provision-workflow debian uefi && watch-hardware-workflows uefi
+watch-hardware-workflows uefi
 etherwake -i eth1 c0:3f:d5:6c:b7:5a
 provision-workflow hello-world rpi1 && watch-hardware-workflows rpi1
 watch-hardware-workflows rpi1
