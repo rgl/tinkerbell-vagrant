@@ -19,6 +19,7 @@ sed -i -E "s,(TINKERBELL_HOST_IP)=.*,\\1=$provisioner_ip_address,g" .env
 yq eval --inplace 'del(.services.create-tink-records)' docker-compose.yml
 yq eval --inplace 'del(.services.ubuntu-image-setup)' docker-compose.yml
 yq eval --inplace 'del(.services.osie-bootloader.depends_on.ubuntu-image-setup)' docker-compose.yml
+yq eval --inplace '.services.hegel.ports[0] = "50061:50061/tcp"' docker-compose.yml
 yq eval --inplace '.services.osie-bootloader.volumes += ["./osie-bootloader/nginx-templates:/etc/nginx/templates:ro"]' docker-compose.yml
 install -d osie-bootloader/nginx-templates
 # NB autoindex is required by httpdirfs to mount an http filesystem.
