@@ -52,8 +52,9 @@ from tabulate import tabulate
 headers = ('service', 'address', 'username', 'password')
 
 def info():
-    yield ('meshcommander', 'http://$host_ip_address:4000', None, None)
-    yield ('portainer',     'http://$host_ip_address:9000', 'admin', 'abracadabra')
+    yield ('meshcommander',    'http://$host_ip_address:4000', None, None)
+    yield ('portainer',        'http://$host_ip_address:9000', 'admin', 'abracadabra')
+    yield ('tinkerbell-nginx', 'http://$host_ip_address:8080', None, None)
 
 print(tabulate(info(), headers=headers))
 EOF
