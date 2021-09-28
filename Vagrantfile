@@ -117,9 +117,12 @@ done
         lv.boot 'hd'
         lv.boot 'network'
         lv.mgmt_attach = false
-        lv.random :model => 'random'
+        #lv.random :model => 'random' # NB this makes the tinkerbell built iPXE to take too much time to leave the "Initialising devices" phase.
         lv.graphics_type = 'spice'
-        lv.video_type = 'virtio'
+        lv.video_type = 'qxl'
+        lv.input :type => 'tablet', :bus => 'usb'
+        lv.channel :type => 'unix', :target_name => 'org.qemu.guest_agent.0', :target_type => 'virtio'
+        lv.channel :type => 'spicevmc', :target_name => 'com.redhat.spice.0', :target_type => 'virtio'
         # set some BIOS settings that will help us identify this particular machine.
         #
         #   QEMU                | Linux
@@ -139,14 +142,14 @@ done
           'type=1,manufacturer=your vendor name here',
           'type=1,product=your product name here',
           'type=1,version=your product version here',
-          'type=1,serial=your product serial number here',
+          "type=1,serial=your product serial number here #{i+1}",
           'type=1,sku=your product SKU here',
           "type=1,uuid=00000000-0000-4000-8000-00000000000#{i+1}",
           'type=3,manufacturer=your chassis vendor name here',
           #'type=3,family=1', # TODO why this does not work on qemu from ubuntu 18.04?
           'type=3,version=your chassis version here',
-          'type=3,serial=your chassis serial number here',
-          'type=3,asset=your chassis asset tag here',
+          "type=3,serial=your chassis serial number here #{i+1}",
+          "type=3,asset=your chassis asset tag here #{i+1}",
         ].each do |value|
           lv.qemuargs :value => '-smbios'
           lv.qemuargs :value => value

@@ -1,0 +1,18 @@
+version: "0.1"
+name: windows-2022
+global_timeout: 1800
+tasks:
+  - name: windows-2022-install
+    worker: '{{.device_1}}'
+    volumes:
+      - /dev:/dev
+      - /sys/firmware/efi/efivars:/sys/firmware/efi/efivars
+      - /worker:/worker
+    actions:
+      - name: install-os
+        image: clonezilla-restoredisk
+        environment:
+          IMG_URL: '{{.img_url}}'
+          DEST_DEVICE: '{{.boot_device}}'
+      - name: reboot
+        image: reboot

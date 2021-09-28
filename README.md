@@ -92,6 +92,7 @@ the UEFI variant):
 * [Debian](https://github.com/rgl/debian-vagrant)
 * [Proxmox VE](https://github.com/rgl/proxmox-ve)
 * [Ubuntu](https://github.com/rgl/ubuntu-vagrant)
+* [Windows 2022](https://github.com/rgl/windows-vagrant)
 
 Launch the `provisioner` with:
 
@@ -168,6 +169,7 @@ provision-workflow debian        uefi && watch-hardware-workflows uefi
 provision-workflow flatcar-linux uefi && watch-hardware-workflows uefi
 provision-workflow proxmox-ve    uefi && watch-hardware-workflows uefi
 provision-workflow ubuntu        uefi && watch-hardware-workflows uefi
+provision-workflow windows-2022  uefi && watch-hardware-workflows uefi
 ```
 
 See which containers are running in the `provisioner` machine:
