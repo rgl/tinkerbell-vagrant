@@ -81,6 +81,33 @@ done
 "
 }
 
+function install-vagrant-box-raw-image {
+  local VAGRANT_BOX_IMAGE_PATH=/vagrant-boxes/$1/0/libvirt/box.img
+  local IMAGE_NAME=$2
+  local IMAGE_PATH="$TINKERBELL_STATE_WEBROOT_PATH/images/$IMAGE_NAME.raw.gz"
+  #local IMAGE_PATH="$TINKERBELL_STATE_WEBROOT_PATH/images/$IMAGE_NAME.raw.zs" # TODO see https://github.com/tinkerbell/hub/issues/65
+
+  if [ ! -f "$VAGRANT_BOX_IMAGE_PATH" ]; then
+    echo "WARNING: $VAGRANT_BOX_IMAGE_PATH does not exist. skipping creating the $RAW_IMAGE_NAME image."
+    exit 0
+  fi
+
+  # convert the vagrant box to a compressed raw image.
+  if [ ! -f "$IMAGE_PATH" ] || [ "$VAGRANT_BOX_IMAGE_PATH" -nt "$IMAGE_PATH" ]; then
+    local IMAGE_RAW_CACHE_PATH="/vagrant/tmp/$IMAGE_NAME.raw"
+    local IMAGE_CACHE_PATH="$IMAGE_RAW_CACHE_PATH.gz"
+    #local IMAGE_CACHE_PATH="$IMAGE_RAW_CACHE_PATH.zs"
+    qemu-img convert -W -O raw "$VAGRANT_BOX_IMAGE_PATH" "$IMAGE_RAW_CACHE_PATH"
+    pigz --stdout "$IMAGE_RAW_CACHE_PATH">"$IMAGE_CACHE_PATH.tmp"
+    #zstd -T0 -o "$IMAGE_CACHE_PATH.tmp" "$IMAGE_RAW_CACHE_PATH"
+    mv "$IMAGE_CACHE_PATH.tmp" "$IMAGE_CACHE_PATH"
+    rm "$IMAGE_RAW_CACHE_PATH"
+    install -d "$(dirname "$IMAGE_PATH")"
+    cp "$IMAGE_CACHE_PATH" "$IMAGE_PATH"
+    du -h $IMAGE_PATH
+  fi
+}
+
 function install-vagrant-box-clonezilla-image {
   local VAGRANT_BOX_IMAGE_PATH=/vagrant-boxes/$1/0/libvirt/box.img
   local CLONEZILLA_IMAGE_NAME=$2

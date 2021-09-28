@@ -1,0 +1,21 @@
+version: "0.1"
+name: proxmox-ve
+global_timeout: 1800
+tasks:
+  - name: proxmox-ve-install
+    worker: '{{.device_1}}'
+    volumes:
+      - /dev:/dev
+      - /sys/firmware/efi/efivars:/sys/firmware/efi/efivars
+      - /worker:/worker
+    actions:
+      - name: install-os
+        image: image2disk:v1.0.0
+        environment:
+          IMG_URL: '{{.img_url}}'
+          COMPRESSED: true
+          DEST_DISK: '{{.boot_device}}'
+      - name: reset-uefi-boot
+        image: reset-uefi-boot
+      - name: reboot
+        image: reboot

@@ -143,6 +143,7 @@ apt-get install -y python3-tabulate python3-pem
 apt-get install -y --no-install-recommends git
 apt-get install -y make patch
 apt-get install -y qemu-utils
+apt-get install -y pigz
 
 # install yq.
 wget -qO- https://github.com/mikefarah/yq/releases/download/v4.12.2/yq_linux_amd64.tar.gz | tar xz

@@ -90,6 +90,7 @@ Optionally, build and install the following vagrant boxes (which must be using
 the UEFI variant):
 
 * [Debian](https://github.com/rgl/debian-vagrant)
+* [Proxmox VE](https://github.com/rgl/proxmox-ve)
 * [Ubuntu](https://github.com/rgl/ubuntu-vagrant)
 
 Launch the `provisioner` with:
@@ -164,8 +165,9 @@ To execute a more realistic workflow, you can install one of the following:
 
 ```bash
 provision-workflow debian        uefi && watch-hardware-workflows uefi
-provision-workflow ubuntu        uefi && watch-hardware-workflows uefi
 provision-workflow flatcar-linux uefi && watch-hardware-workflows uefi
+provision-workflow proxmox-ve    uefi && watch-hardware-workflows uefi
+provision-workflow ubuntu        uefi && watch-hardware-workflows uefi
 ```
 
 See which containers are running in the `provisioner` machine:
