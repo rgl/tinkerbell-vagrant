@@ -9,7 +9,7 @@ provisioner_ip_address="${1:-10.3.0.2}"; shift || true
 # see https://github.com/tinkerbell/sandbox
 # see https://github.com/rgl/tinkerbell-tink
 tinkerbell_repository='https://github.com/tinkerbell/sandbox.git'
-tinkerbell_version='8256ad1e8515c2a97a27091c0f5c12e42f083748' # 2021-09-20T15:37:22Z
+tinkerbell_version='41a7ae3c6040c909bd1a496412936aea01fed260' # 2021-10-04T21:07:07Z
 cd ~
 git clone --no-checkout $tinkerbell_repository tinkerbell-sandbox
 cd tinkerbell-sandbox
