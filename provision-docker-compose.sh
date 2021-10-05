@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-docker_compose_version="${1:-v2.0.0-rc.3}"; shift || true
+docker_compose_version="${1:-v2.0.0}"; shift || true
 
 # download.
 # see https://github.com/docker/compose/releases

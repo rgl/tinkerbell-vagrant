@@ -8,7 +8,7 @@ function tink {
   #    but there is no universal workaround for it... we have to wait
   #    for an upstream fix.
   # see https://github.com/tinkerbell/tink/issues/524
-  docker exec -i compose_tink-cli_1 tink "$@"
+  docker exec -i compose-tink-cli-1 tink "$@"
 }
 
 # recreate the given template and workflow.
@@ -28,7 +28,7 @@ function delete-template {
 }
 
 function get-hardware-workflows {
-  docker exec -i compose_db_1 psql -U tinkerbell -A -t <<EOF
+  docker exec -i compose-db-1 psql -U tinkerbell -A -t <<EOF
 select
   w.workflow_id, h.hardware_id, h.hostname, h.mac
 from
@@ -75,8 +75,8 @@ function watch-hardware-workflows {
   [ -z "$workflow_ids" ] && echo "the $hardware_hostname hardware does not have any workflow" && return
   watch "
 echo \"$workflow_ids\" | while read workflow_id; do
-  docker exec -i compose_tink-cli_1 tink workflow state \$workflow_id
-  docker exec -i compose_tink-cli_1 tink workflow events \$workflow_id
+  docker exec -i compose-tink-cli-1 tink workflow state \$workflow_id
+  docker exec -i compose-tink-cli-1 tink workflow events \$workflow_id
 done
 "
 }

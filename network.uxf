@@ -4,7 +4,7 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>740</x>
+      <x>800</x>
       <y>120</y>
       <w>1280</w>
       <h>160</h>
@@ -16,7 +16,7 @@ tp-link sg108e</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>740</x>
+      <x>800</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -30,7 +30,7 @@ untagged vlan id: 2</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>900</x>
+      <x>960</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -45,7 +45,7 @@ tagged vlan id: 2, 3</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>500</x>
+      <x>560</x>
       <y>120</y>
       <w>180</w>
       <h>160</h>
@@ -57,7 +57,7 @@ ISP switch</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>580</x>
+      <x>640</x>
       <y>270</y>
       <w>260</w>
       <h>60</h>
@@ -68,7 +68,7 @@ ISP switch</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>500</x>
+      <x>560</x>
       <y>0</y>
       <w>180</w>
       <h>40</h>
@@ -79,7 +79,7 @@ ISP switch</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>580</x>
+      <x>640</x>
       <y>30</y>
       <w>30</w>
       <h>110</h>
@@ -90,7 +90,7 @@ ISP switch</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1380</x>
+      <x>1440</x>
       <y>670</y>
       <w>160</w>
       <h>70</h>
@@ -103,7 +103,7 @@ hostname: rpi1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1450</x>
+      <x>1510</x>
       <y>270</y>
       <w>30</w>
       <h>420</h>
@@ -114,7 +114,7 @@ hostname: rpi1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1060</x>
+      <x>1120</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -128,7 +128,7 @@ untagged vlan id: 3</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1220</x>
+      <x>1280</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -142,7 +142,7 @@ untagged vlan id: 3</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1380</x>
+      <x>1440</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -156,7 +156,7 @@ untagged vlan id: 3</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1540</x>
+      <x>1600</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -170,7 +170,7 @@ untagged vlan id: 3</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1700</x>
+      <x>1760</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -184,7 +184,7 @@ untagged vlan id: 3</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1860</x>
+      <x>1920</x>
       <y>180</y>
       <w>160</w>
       <h>100</h>
@@ -198,9 +198,9 @@ untagged vlan id: 3</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
+      <x>10</x>
       <y>340</y>
-      <w>1070</w>
+      <w>1120</w>
       <h>1080</h>
     </coordinates>
     <panel_attributes>&lt;&lt;pc&gt;&gt;
@@ -210,7 +210,7 @@ hostname: host</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>970</x>
+      <x>1030</x>
       <y>270</y>
       <w>30</w>
       <h>130</h>
@@ -221,7 +221,7 @@ hostname: host</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>640</x>
+      <x>700</x>
       <y>480</y>
       <w>120</w>
       <h>80</h>
@@ -234,21 +234,20 @@ ip: 10.3.0.1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>780</x>
+      <x>790</x>
       <y>600</y>
-      <w>270</w>
+      <w>320</w>
       <h>800</h>
     </coordinates>
     <panel_attributes>&lt;&lt;vm&gt;&gt;
 name: provisioner
-eth1 ip: 10.3.0.2
-eth1 ip: 10.3.0.3</panel_attributes>
+eth1 ip: 10.3.0.2</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
+      <x>980</x>
       <y>380</y>
       <w>130</w>
       <h>60</h>
@@ -260,7 +259,7 @@ name: enp3s0</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>780</x>
+      <x>840</x>
       <y>480</y>
       <w>120</w>
       <h>80</h>
@@ -273,7 +272,7 @@ vlan id: 3</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>830</x>
+      <x>890</x>
       <y>430</y>
       <w>170</w>
       <h>70</h>
@@ -284,7 +283,7 @@ vlan id: 3</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>1100</x>
+      <x>1160</x>
       <y>590</y>
       <w>60</w>
       <h>80</h>
@@ -300,7 +299,7 @@ fg=black</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1040</x>
+      <x>1100</x>
       <y>610</y>
       <w>80</w>
       <h>30</h>
@@ -311,7 +310,7 @@ fg=black</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>690</y>
       <w>380</w>
       <h>50</h>
@@ -324,9 +323,9 @@ rootfs</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>680</y>
-      <w>230</w>
+      <w>280</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>&lt;&lt;nfs share&gt;&gt;
@@ -337,98 +336,98 @@ path: /srv/nfs/rpi1/root
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>1110</y>
-      <w>230</w>
+      <w>280</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>&lt;&lt;container&gt;&gt;
 image: tinkerbell/tink-cli
-name: compose_tink-cli_1</panel_attributes>
+name: compose-tink-cli-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>750</y>
-      <w>230</w>
+      <w>280</w>
       <h>150</h>
     </coordinates>
     <panel_attributes>&lt;&lt;container&gt;&gt;
 image: tinkerbell/boots
-name: compose_boots_1</panel_attributes>
+name: compose-boots-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>1180</y>
-      <w>230</w>
+      <w>280</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>&lt;&lt;container&gt;&gt;
 image: tinkerbell/hegel
-name: compose_hegel_1</panel_attributes>
+name: compose-hegel-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>980</y>
-      <w>230</w>
+      <w>280</w>
       <h>120</h>
     </coordinates>
     <panel_attributes>&lt;&lt;container&gt;&gt;
 image: tinkerbell/tink
-name: compose_tink-server_1</panel_attributes>
+name: compose-tink-server-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>910</y>
-      <w>230</w>
+      <w>280</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>&lt;&lt;container&gt;&gt;
 image: postgres:10-alpine
-name: compose_db_1</panel_attributes>
+name: compose-db-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>1250</y>
-      <w>230</w>
+      <w>280</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>&lt;&lt;container&gt;&gt;
-image: compose_registry
-name: compose_registry_1</panel_attributes>
+image: registry
+name: compose-registry-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>800</x>
+      <x>810</x>
       <y>1320</y>
-      <w>230</w>
+      <w>280</w>
       <h>60</h>
     </coordinates>
     <panel_attributes>&lt;&lt;container&gt;&gt;
 image: nginx:alpine
-name: compose_nginx_1</panel_attributes>
+name: compose-osie-bootloader-1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>750</y>
       <w>370</w>
       <h>40</h>
@@ -441,7 +440,7 @@ r2=dhcp/udp/0.0.0.0:67
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>780</y>
       <w>370</w>
       <h>40</h>
@@ -454,7 +453,7 @@ r2=tftp/udp/10.3.0.2:69
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>840</y>
       <w>370</w>
       <h>40</h>
@@ -467,7 +466,7 @@ r2=ipxe-script/http/tcp/10.3.0.2:80
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>810</y>
       <w>370</w>
       <h>40</h>
@@ -480,7 +479,7 @@ r2=syslog/udp/10.3.0.2:514
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>1180</y>
       <w>300</w>
       <h>40</h>
@@ -493,7 +492,7 @@ r2=tcp/0.0.0.0:42115
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>1210</y>
       <w>300</w>
       <h>40</h>
@@ -506,7 +505,7 @@ r2=http/tcp/0.0.0.0:50061
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>1250</y>
       <w>300</w>
       <h>40</h>
@@ -519,94 +518,94 @@ r2=https/tcp/0.0.0.0:443
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
+      <x>480</x>
       <y>850</y>
-      <w>400</w>
+      <w>350</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=)-
 </panel_attributes>
-    <additional_attributes>90.0;80.0;20.0;80.0;10.0;70.0;10.0;20.0;20.0;10.0;380.0;10.0</additional_attributes>
+    <additional_attributes>90.0;80.0;20.0;80.0;10.0;70.0;10.0;20.0;20.0;10.0;330.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>520</x>
+      <x>580</x>
       <y>910</y>
-      <w>300</w>
+      <w>250</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=()-
 r1=pgsql/tcp/:5432
 </panel_attributes>
-    <additional_attributes>10.0;20.0;280.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;230.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>520</x>
+      <x>580</x>
       <y>1030</y>
-      <w>300</w>
+      <w>250</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=()-
 r1=http/tcp/:42114
 </panel_attributes>
-    <additional_attributes>10.0;20.0;280.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;230.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>520</x>
+      <x>580</x>
       <y>1180</y>
-      <w>300</w>
+      <w>250</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=()-
 r1=grpc/tcp/:42115
 </panel_attributes>
-    <additional_attributes>10.0;20.0;280.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;230.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
+      <x>480</x>
       <y>910</y>
-      <w>400</w>
+      <w>350</w>
       <h>340</h>
     </coordinates>
     <panel_attributes>lt=)-
 </panel_attributes>
-    <additional_attributes>90.0;20.0;20.0;20.0;10.0;30.0;10.0;310.0;20.0;320.0;380.0;320.0</additional_attributes>
+    <additional_attributes>90.0;20.0;20.0;20.0;10.0;30.0;10.0;310.0;20.0;320.0;330.0;320.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>420</x>
+      <x>480</x>
       <y>910</y>
-      <w>400</w>
+      <w>350</w>
       <h>190</h>
     </coordinates>
     <panel_attributes>lt=)-
 </panel_attributes>
-    <additional_attributes>90.0;20.0;20.0;20.0;10.0;30.0;10.0;160.0;20.0;170.0;380.0;170.0</additional_attributes>
+    <additional_attributes>90.0;20.0;20.0;20.0;10.0;30.0;10.0;160.0;20.0;170.0;330.0;170.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>470</x>
+      <x>530</x>
       <y>990</y>
-      <w>350</w>
+      <w>300</w>
       <h>160</h>
     </coordinates>
     <panel_attributes>lt=)-
 </panel_attributes>
-    <additional_attributes>40.0;20.0;20.0;20.0;10.0;30.0;10.0;130.0;20.0;140.0;330.0;140.0</additional_attributes>
+    <additional_attributes>40.0;20.0;20.0;20.0;10.0;30.0;10.0;130.0;20.0;140.0;280.0;140.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>880</y>
       <w>350</w>
       <h>420</h>
@@ -618,32 +617,32 @@ r1=grpc/tcp/:42115
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>470</x>
+      <x>530</x>
       <y>880</y>
-      <w>350</w>
+      <w>300</w>
       <h>160</h>
     </coordinates>
     <panel_attributes>lt=)-
 </panel_attributes>
-    <additional_attributes>40.0;130.0;20.0;130.0;10.0;120.0;10.0;20.0;20.0;10.0;330.0;10.0</additional_attributes>
+    <additional_attributes>40.0;130.0;20.0;130.0;10.0;120.0;10.0;20.0;20.0;10.0;280.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1020</x>
+      <x>1080</x>
       <y>1320</y>
       <w>300</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=-()
-r2=http/tcp/10.3.0.3:80
+r2=http/tcp/10.3.0.2:8080
 </panel_attributes>
     <additional_attributes>10.0;20.0;280.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>400</x>
+      <x>410</x>
       <y>600</y>
       <w>360</w>
       <h>120</h>
@@ -659,18 +658,18 @@ firmware: bios</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>690</x>
+      <x>580</x>
       <y>550</y>
-      <w>30</w>
+      <w>200</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
+    <additional_attributes>180.0;10.0;180.0;30.0;10.0;30.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>20</x>
+      <x>30</x>
       <y>600</y>
       <w>360</w>
       <h>120</h>
@@ -686,20 +685,20 @@ firmware: uefi</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>520</x>
+      <x>580</x>
       <y>990</y>
-      <w>300</w>
+      <w>250</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=()-
 r1=grpc/tcp/:42113
 </panel_attributes>
-    <additional_attributes>10.0;20.0;280.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;230.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>920</x>
+      <x>980</x>
       <y>480</y>
       <w>130</w>
       <h>80</h>
@@ -713,7 +712,7 @@ ip: 192.168.1.1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>970</x>
+      <x>1030</x>
       <y>430</y>
       <w>30</w>
       <h>70</h>
@@ -724,18 +723,18 @@ ip: 192.168.1.1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>350</x>
+      <x>200</x>
       <y>550</y>
-      <w>370</w>
+      <w>580</w>
       <h>70</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
-    <additional_attributes>350.0;10.0;350.0;30.0;10.0;30.0;10.0;50.0</additional_attributes>
+    <additional_attributes>560.0;10.0;560.0;30.0;10.0;30.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>750</x>
+      <x>810</x>
       <y>510</y>
       <w>50</w>
       <h>30</h>
@@ -746,7 +745,7 @@ ip: 192.168.1.1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>690</x>
+      <x>750</x>
       <y>550</y>
       <w>190</w>
       <h>70</h>
