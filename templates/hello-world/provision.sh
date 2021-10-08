@@ -7,10 +7,16 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 export provisioner_ip_address="$TINKERBELL_HOST_IP"
 worker_ip_address_prefix="$(echo $provisioner_ip_address | cut -d "." -f 1).$(echo $provisioner_ip_address | cut -d "." -f 2).$(echo $provisioner_ip_address | cut -d "." -f 3)"
 
-# provision the example x86_64 image.
-docker pull debian:bullseye-slim
-docker tag debian:bullseye-slim $provisioner_ip_address/debian:bullseye-slim
-docker push $provisioner_ip_address/debian:bullseye-slim
+# provision the hello-world image.
+docker buildx build \
+    --tag $TINKERBELL_HOST_IP/hello-world \
+    --output type=registry \
+    --platform linux/amd64,linux/arm64 \
+    --progress plain \
+    - <<'EOF'
+FROM debian:bullseye-slim
+EOF
+docker manifest inspect $TINKERBELL_HOST_IP/hello-world
 
 # provision an example hello-world workflow template.
 delete-template hello-world
@@ -23,7 +29,7 @@ tasks:
     worker: '{{.device_1}}'
     actions:
       - name: hello-world
-        image: debian:bullseye-slim
+        image: hello-world
         timeout: 60
         command:
           - bash
@@ -32,7 +38,7 @@ tasks:
             echo 'hello-world'
             echo 'Hello World!'
       - name: info
-        image: debian:bullseye-slim
+        image: hello-world
         timeout: 60
         volumes:
           # NB the root directory is inside the dind container. to access it at

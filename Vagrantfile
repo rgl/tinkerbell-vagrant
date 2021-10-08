@@ -80,11 +80,13 @@ Vagrant.configure('2') do |config|
         inline: '''bash -euc \'
 file_paths=(
   ~/.ssh/id_rsa.pub
+  ../tinkerbell-debian-osie/tinkerbell-debian-osie-amd64.iso
+  ../tinkerbell-debian-osie/tinkerbell-debian-osie-arm64.iso
 )
 for file_path in "${file_paths[@]}"; do
   if [ -f $file_path ]; then
     mkdir -p tmp
-    cp $file_path tmp
+    rsync $file_path tmp
   fi
 done
 \'
@@ -96,7 +98,11 @@ done
     config.vm.provision :shell, path: 'provision-docker-compose.sh'
     config.vm.provision :shell, path: 'provision-portainer.sh'
     config.vm.provision :shell, path: 'provision-meshcommander.sh'
+    config.vm.provision :shell, path: 'provision-go.sh'
     config.vm.provision :shell, path: 'provision-tinkerbell.sh', args: [$provisioner_ip_address]
+    config.vm.provision :shell, path: 'provision-docker-buildx.sh'
+    config.vm.provision :shell, path: 'provision-debian-boots.sh'
+    config.vm.provision :shell, path: 'provision-debian-osie.sh'
     config.vm.provision :shell, path: 'provision-nfs-server.sh'
     config.vm.provision :shell, path: 'actions/provision.sh'
     config.vm.provision :shell, path: 'templates/provision.sh'

@@ -86,6 +86,8 @@ network:
 
 Build and install the [Ubuntu Linux vagrant box](https://github.com/rgl/ubuntu-vagrant).
 
+Build [Debian OSIE](https://github.com/rgl/tinkerbell-debian-osie) in `../tinkerbell-debian-osie`.
+
 Optionally, build and install the following vagrant boxes (which must be using
 the UEFI variant):
 
@@ -115,8 +117,6 @@ In another terminal, launch the `uefi` worker machine with:
 ```bash
 vagrant up --no-destroy-on-error --no-tty uefi
 ```
-
-**NB** Alpine Linux OSIE: If the machine boots and nothing seems to happen, [workflow-helper](https://github.com/tinkerbell/osie/blob/master/apps/workflow-helper.sh) might have crashed. Login into the worker as `root` (no password needed) and check the [Alpine Linux Init System](https://wiki.alpinelinux.org/wiki/Alpine_Linux_Init_System) status with `rc-status`. If it appears as `crashed`, try to manually execute `workflow-helper` and go from there. You might also want to execute `docker images -a` and `docker ps -a`.
 
 In another terminal, watch the workflow progress with:
 
@@ -239,66 +239,20 @@ You can also use the [Portainer](https://github.com/portainer/portainer)
 application at the address that is displayed after the vagrant environment
 is launched (e.g. at `http://10.3.0.2:9000`).
 
-# Tinkerbell Hook
+# Tinkerbell Debian OSIE
 
-This vagrant environment uses the [linuxkit based hook osie](https://github.com/tinkerbell/hook)
-instead of the [alpine linux based osie](https://github.com/tinkerbell/osie).
+This vagrant environment uses the [Debian based OSIE](https://github.com/rgl/tinkerbell-debian-osie)
+instead of the [LinuxKit based OSIE](https://github.com/tinkerbell/osie).
 
-In the osie you can execute the following troubleshooting commands:
-
-```bash
-alias l='ls -lF'
-alias ll='l -a'
-alias ctr='ctr -n services.linuxkit'
-alias docker='ctr tasks exec --tty --exec-id shell docker docker'
-
-# list the containers.
-ctr containers ls
-
-# list the tasks that are actually running in the containers.
-ctr tasks ls
-
-# list the processes running in the (tink-)docker container.
-ctr task ps docker
-
-# list the downloaded images and docker containers.
-# NB to troubleshoot check the containers logs with docker logs.
-docker images -a
-docker ps -a
-```
+You can login into it using the `osie` username and password.
 
 # Raspberry Pi
 
-Tinkerbell boots and the rpi PXE client are not compatible with each-other and
-as such we will not use the rpi PXE client at all, instead we will use
-iPXE/UEFI.
+Install the RPI4-UEFI-IPXE firmware into a sd-card as described at
+https://github.com/rgl/rpi4-uefi-ipxe.
 
-Create a [iPXE/UEFI](https://github.com/rgl/raspberrypi-uefi-edk2-vagrant)
-sd-card with [balenaEtcher](https://www.balena.io/etcher/), put it in your pi
-and power it on.
-
-Press `ESC` to enter the UEFI setup, then:
-
-1. Select `Device Manager`.
-2. Select `Raspberry Pi Configuration`.
-3. Select `Advanced Configuration`.
-4. Select `System Table Selection`.
-5. Select `Devicetree`.
-6. Press `F10`.
-7. Press `ESC` until you reach the main menu.
-8. Select `Continue` to boot to the iPXE prompt.
-
-At the iPXE boot prompt type the following command to boot tinkerbell osie:
-
-```
-chain --autofree http://${next-server}/auto.ipxe
-```
-
-The `auto.ipxe` script is handled by tinkerbell boots in:
-
-* [job/http.go#Job.ServeFile](https://github.com/tinkerbell/boots/blob/10b79956134ae3badae65a668614b3e6b332ca3b/job/http.go#L15-L25)
-* [job/ipxe.go#Job.serveBootScript](https://github.com/tinkerbell/boots/blob/a776430e1230851a873d9c5a945a8b5c8506f09f/job/ipxe.go#L47-L68)
-* [installers/osie/main.go#install](https://github.com/tinkerbell/boots/blob/139cc4cdb1f9537acd3eaeac536e0d86f6df3624/installers/osie/main.go#L23-L36)
+Insert an external disk (e.g. an USB flash drive or USB SSD) to use as target on
+your Tinkerbell Action.
 
 # Intel NUC
 
