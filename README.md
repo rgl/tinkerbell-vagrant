@@ -242,7 +242,7 @@ is launched (e.g. at `http://10.3.0.2:9000`).
 # Tinkerbell Debian OSIE
 
 This vagrant environment uses the [Debian based OSIE](https://github.com/rgl/tinkerbell-debian-osie)
-instead of the [LinuxKit based OSIE](https://github.com/tinkerbell/osie).
+instead of the [LinuxKit (aka Hook) based OSIE](https://github.com/tinkerbell/hook).
 
 You can login into it using the `osie` username and password.
 
