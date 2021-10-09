@@ -44,6 +44,8 @@ set -euo pipefail
 function get-param {
     cat /proc/cmdline | tr ' ' '\n' | grep "^$1=" | sed -E 's,.+=(.*),\1,g'
 }
+
+#systemctl disable --now tink-worker
 SCRIPT_EOF
 popd
 pushd ~/tinkerbell-sandbox/deploy/compose
