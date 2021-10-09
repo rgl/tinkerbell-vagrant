@@ -151,9 +151,11 @@ You should eventually see something alike:
 
 **NB** After a workflow action is executed, `tink-worker` will not re-execute it, even if you reboot the worker. You must create a new workflow, e.g. `provision-workflow hello-world uefi && watch-hardware-workflows uefi`.
 
+You can see the worker and action logs from Grafana Explore (its address is displayed at the end of the provisioning).
+
 From within the worker machine, you can query the metadata endpoint:
 
-**NB** this endpoint returns the data set in the `TODO` field of the partilar worker `hardware` document.
+**NB** this endpoint returns the data set in the `TODO` field of the particular worker `hardware` document.
 
 ```bash
 metadata_url="$(cat /proc/cmdline | tr ' ' '\n' | awk '/^tinkerbell=(.+)/{print "$1:50061/metadata"}')"
