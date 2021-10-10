@@ -32,7 +32,9 @@ for worker in "${workers[@]}"; do
     "facility": {
       "facility_code": "onprem"
     },
-    "instance": {},
+    "instance": {
+      "hostname": "$worker_name"
+    },
     "state": ""
   },
   "network": {

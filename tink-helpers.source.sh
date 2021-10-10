@@ -27,6 +27,9 @@ function delete-template {
   done
 }
 
+# TODO possible change get-hardware-workflows, get-hardware-mac and
+#      provision-workflow.sh depending on the outcome of
+#      https://github.com/tinkerbell/tink/issues/550
 function get-hardware-workflows {
   docker exec -i compose-db-1 psql -U tinkerbell -A -t <<EOF
 select
@@ -46,7 +49,7 @@ inner join
     select
       id as hardware_id,
       jsonb_array_elements(data->'network'->'interfaces')->'dhcp'->>'mac' as mac,
-      jsonb_array_elements(data->'network'->'interfaces')->'dhcp'->>'hostname' as hostname
+      (data->>'metadata')::json->'instance'->>'hostname' as hostname
     from
       hardware
   ) as h
@@ -54,6 +57,20 @@ on
   w.mac=h.mac
 where
   h.hostname='$1'
+EOF
+}
+
+function get-hardware-mac {
+  local hardware_hostname="$1"
+  (docker exec -i compose-db-1 psql -U tinkerbell -A -t | awk -F '|' '{print $2}') <<EOF
+select
+  id as hardware_id,
+  jsonb_array_elements(data->'network'->'interfaces')->'dhcp'->>'mac' as mac,
+  (data->>'metadata')::json->'instance'->>'hostname' as hostname
+from
+  hardware
+where
+  (data->>'metadata')::json->'instance'->>'hostname'='$1'
 EOF
 }
 

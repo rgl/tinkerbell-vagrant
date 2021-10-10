@@ -14,7 +14,7 @@ img_url="nfs://$TINKERBELL_HOST_IP/var/nfs/images/ubuntu-amd64"
 install-vagrant-box-clonezilla-image ubuntu-20.04-uefi-amd64 ubuntu-amd64
 
 # find the hardware with the given hostname.
-hardware_mac="$(tink hardware get --format json | jq -r --arg hostname "$hardware_hostname" '.data[].network.interfaces[] | select(.dhcp.hostname==$hostname) | .dhcp.mac')"
+hardware_mac="$(get-hardware-mac "$hardware_hostname")"
 
 # find the template id.
 template_id="$(tink template get --format json | jq -r '.data[] | select(.name=="ubuntu") | .id')"

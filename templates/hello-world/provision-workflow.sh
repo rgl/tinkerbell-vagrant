@@ -7,7 +7,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 hardware_hostname="$1"
 
 # find the hardware with the given hostname.
-hardware_mac="$(tink hardware get --format json | jq -r --arg hostname "$hardware_hostname" '.data[].network.interfaces[] | select(.dhcp.hostname==$hostname) | .dhcp.mac')"
+hardware_mac="$(get-hardware-mac "$hardware_hostname")"
 
 # find the template id.
 template_id="$(tink template get --format json | jq -r '.data[] | select(.name=="hello-world") | .id')"
