@@ -1,10 +1,10 @@
-This is a [Vagrant](https://www.vagrantup.com/) Environment for playing with [Tinkerbell](https://tinkerbell.org/) for provisioning Raspberry Pis.
+This is a [Vagrant](https://www.vagrantup.com/) Environment for playing with [Tinkerbell](https://tinkerbell.org/) for provisioning AMD64 and ARM64 (e.g. Raspberry Pi) machines.
 
 # Usage
 
 This `provisioner` environment is essentially running all the Tinkerbell [components](https://tinkerbell.org/components/) inside a single virtual machine.
 
-In order for it to work you need to connect the `provisioner` virtual network to a physical network that reaches the Raspberry Pis.
+In order for it to work you need to connect the `provisioner` virtual network to a physical network that reaches the physical machines.
 
 I'm using Ubuntu 20.04 as the host, qemu/kvm/libvirt has the hypervisor, and a [tp-link tl-sg108e](https://www.tp-link.com/en/business-networking/easy-smart-switch/tl-sg108e/) switch.
 
