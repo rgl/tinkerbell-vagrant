@@ -49,7 +49,7 @@ inner join
     select
       id as hardware_id,
       jsonb_array_elements(data->'network'->'interfaces')->'dhcp'->>'mac' as mac,
-      (data->>'metadata')::json->'instance'->>'hostname' as hostname
+      (data->>'metadata')::jsonb->'instance'->>'hostname' as hostname
     from
       hardware
   ) as h
