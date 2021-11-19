@@ -7,7 +7,7 @@ if [ ! -d ~/tinkerbell-boots ]; then
     cd ~
     git clone --no-checkout https://github.com/rgl/tinkerbell-boots.git tinkerbell-boots
     cd tinkerbell-boots
-    git checkout -f rgl-debian-osie
+    git checkout -f rgl-debian-osie-http-boot
 fi
 
 # install dependencies.
