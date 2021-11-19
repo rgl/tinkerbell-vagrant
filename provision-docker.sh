@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-docker_version='20.10.9'
+docker_version='20.10.11'
 
 # prevent apt-get et al from asking questions.
 # NB even with this, you'll still get some warnings that you can ignore:
