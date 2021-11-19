@@ -19,6 +19,16 @@ ENV['VAGRANT_EXPERIMENTAL'] = 'typed_triggers'
 
 require 'open3'
 
+# get the docker hub auth from the host ~/.docker/config.json file.
+def get_docker_hub_auth
+  config_path = File.expand_path '~/.docker/config.json'
+  return nil unless File.exists? config_path
+  config = JSON.load File.read(config_path)
+  return nil unless config.has_key?('auths') && config['auths'].has_key?('https://index.docker.io/v1/')
+  config['auths']['https://index.docker.io/v1/']['auth']
+end
+DOCKER_HUB_AUTH = get_docker_hub_auth
+
 Vagrant.configure('2') do |config|
   config.vm.box = 'ubuntu-20.04-amd64'
 
@@ -95,6 +105,7 @@ done
     end
     config.vm.provision :shell, path: 'provision-base.sh'
     config.vm.provision :shell, path: 'provision-docker.sh'
+    config.vm.provision :shell, path: 'provision-docker-hub-auth.sh', env: {'DOCKER_HUB_AUTH' => DOCKER_HUB_AUTH}
     config.vm.provision :shell, path: 'provision-docker-compose.sh'
     config.vm.provision :shell, path: 'provision-portainer.sh'
     config.vm.provision :shell, path: 'provision-loki.sh'
