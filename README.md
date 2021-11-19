@@ -282,7 +282,7 @@ You can also do it from the host by capturing traffic from the `br-rpi` or `vlan
 
 ## Database
 
-Tinkerbell uses the [tinkerbell](https://github.com/tinkerbell/tink/blob/master/deploy/db/tinkerbell-init.sql)
+Tinkerbell uses the [tinkerbell](https://github.com/tinkerbell/tink/tree/main/db/migration)
 PostgreSQL database, you can access its console with, e.g.:
 
 ```bash
