@@ -96,6 +96,8 @@ the UEFI variant):
 * [Ubuntu](https://github.com/rgl/ubuntu-vagrant)
 * [Windows 2022](https://github.com/rgl/windows-vagrant)
 
+Login into docker hub to have a [higher rate limits](https://www.docker.com/increase-rate-limits).
+
 Launch the `provisioner` with:
 
 ```bash
