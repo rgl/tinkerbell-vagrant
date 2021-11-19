@@ -270,7 +270,12 @@ You can see all the network traffic from within the provisioner by running:
 
 ```bash
 vagrant ssh-config provisioner >tmp/provisioner-ssh-config.conf
-wireshark -k -i <(ssh -F tmp/provisioner-ssh-config.conf provisioner 'sudo tcpdump -s 0 -U -n -i eth1 -w - not tcp port 22')
+# NB this ignores the following ports:
+#          22: SSH
+#       16992: AMT HTTP
+#       16994: AMT Redirection/TCP
+#        4000: MeshCommander
+wireshark -k -i <(ssh -F tmp/provisioner-ssh-config.conf provisioner 'sudo tcpdump -s 0 -U -n -i eth1 -w - not tcp port 22 and not port 16992 and not port 16994 and not port 4000')
 ```
 
 You can also do it from the host by capturing traffic from the `br-rpi` or `vlan.rpi` interface.
