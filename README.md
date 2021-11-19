@@ -210,22 +210,23 @@ At the time of writing these were the containers running by default:
 ```plain
 ContainerName                        ImageName                                 ImageId
 -----------------------------------  ----------------------------------------  -----------------------------------------------------------------------
-/compose-boots-1                     quay.io/tinkerbell/boots:sha-94f43947     sha256:dbebee7b9680a291045eec5c38106bed47d68434b3f9486911af7c5f3011dcde
-/compose-db-1                        postgres:10-alpine                        sha256:17ec9988ae216f69d9e6528aae17a9fce29a2b7951313de9a34802528116f2eb
-/compose-hegel-1                     quay.io/tinkerbell/hegel:sha-9f5da0a8     sha256:1e32a53ea16153ac9c7b6f0eea4aa8956f748ed710d8b926b9257221e794c3b8
-/compose-images-to-local-registry-1  quay.io/containers/skopeo:latest          sha256:330344b12dec285bdd089afe6b2752b6bd84b122ce5e51d7a32567f7b2d68b89
-/compose-osie-bootloader-1           nginx:alpine                              sha256:513f9a9d8748b25cdb0ec6f16b4523af7bba216a6bf0f43f70af75b4cf7cb780
-/compose-osie-work-1                 bash:4.4                                  sha256:e9ae8cfa6bbca7b9790ab5ea66d619e3cf9df5d037f8969980d96193eef0a198
-/compose-registry-1                  registry:2.7.1                            sha256:b2cb11db9d3d60af38d9d6841d3b8b053e5972c0b7e4e6351e9ea4374ed37d8c
-/compose-registry-auth-1             httpd:2                                   sha256:5ebe6e00baf9e77921c66f750839caf2adca3f22595504e4d93154fa5393631a
-/compose-registry-ca-crt-download-1  alpine                                    sha256:14119a10abf4669e8cdbdff324a9f9605d99697215a0d21c360fe8dfa8471bab
-/compose-tink-cli-1                  quay.io/tinkerbell/tink-cli:sha-8ea8a0e5  sha256:c67d5bdf2f1dc5a7eebe1e31a73abe46c28bdafc11ead079688d94253c836ceb
-/compose-tink-server-1               quay.io/tinkerbell/tink:sha-8ea8a0e5      sha256:7231517852e13257353e65ebe58d66eb949ecad5890188b7e050188e7ea05a7d
-/compose-tink-server-migration-1     quay.io/tinkerbell/tink:sha-8ea8a0e5      sha256:7231517852e13257353e65ebe58d66eb949ecad5890188b7e050188e7ea05a7d
+/compose-boots-1                     10.3.0.2/debian-boots                     sha256:397e3206222130ada624953220e8cb38c66365a4e31df7ce808f639c9a141599
+/compose-db-1                        postgres:14-alpine                        sha256:eb82a397daaf176f244e990aa6f550422a764a88759f43e641c3a1323953deb7
+/compose-hegel-1                     quay.io/tinkerbell/hegel:sha-89cb9dc8     sha256:23c22f0bb8779fb4b0fdab8384937c54afbbed6b45aefb3554f2d54cb2c7cffa
+/compose-images-to-local-registry-1  quay.io/containers/skopeo:latest          sha256:9f5c670462ec0dc756fe52ec6c4d080f62c01a0003b982d48bb8218f877a456a
+/compose-osie-bootloader-1           nginx:alpine                              sha256:b46db85084b80a87b94cc930a74105b74763d0175e14f5913ea5b07c312870f8
+/compose-osie-work-1                 bash:4.4                                  sha256:bc8b0716d7386a05b5b3d04276cc7d8d608138be723fbefd834b5e75db6a6aeb
+/compose-registry-1                  registry:2.7.1                            sha256:b8604a3fe8543c9e6afc29550de05b36cd162a97aa9b2833864ea8a5be11f3e2
+/compose-registry-auth-1             httpd:2                                   sha256:ad17c88403e2cedd27963b98be7f04bd3f903dfa7490586de397d0404424936d
+/compose-tink-cli-1                  quay.io/tinkerbell/tink-cli:sha-3743d31e  sha256:8c90de15e97362a708cde2c59d3a261f73e3a4242583a54222b5e18d4070acaf
+/compose-tink-server-1               quay.io/tinkerbell/tink:sha-3743d31e      sha256:fb21c42c067588223b87a5c1f1d9b2892f863bfef29ce5fcd8ba755cfa0a990b
+/compose-tink-server-migration-1     quay.io/tinkerbell/tink:sha-3743d31e      sha256:fb21c42c067588223b87a5c1f1d9b2892f863bfef29ce5fcd8ba755cfa0a990b
 /compose-tls-gen-1                   cfssl/cfssl                               sha256:655abf144edde793a3ff1bc883cc82ca61411efb35d0d403a52f202c9c3cd377
-/compose-tls-gen-run-eb807e23f155    cfssl/cfssl                               sha256:655abf144edde793a3ff1bc883cc82ca61411efb35d0d403a52f202c9c3cd377
-/meshcommander                       meshcommander                             sha256:6aac34c9779f6033fe8c937889ea30f72eb9079c638f58e370a791b1af558cde
-/portainer                           portainer/portainer-ce:2.9.0              sha256:8377e6877145988a508c616a6cbf1f9659ab6093da69f74179c5e01581d8b8b1
+/compose_tls-gen_run_67135735bbb3    cfssl/cfssl                               sha256:655abf144edde793a3ff1bc883cc82ca61411efb35d0d403a52f202c9c3cd377
+/grafana                             grafana/grafana:8.2.5                     sha256:ddfae340d0681fe1a10582b06a2e8ae402196df9d429f0c1cefbe8dedca73cf0
+/loki                                grafana/loki:2.4.1                        sha256:e3e722f23de3fdbb8608dcf1f8824dec62cba65bbfd5ab5ad095eed2d7c5872a
+/meshcommander                       meshcommander                             sha256:aff2fc5004fb7f77b1a14a82c35af72e941fa33715e66c2eab5a5d253820d4bb
+/portainer                           portainer/portainer-ce:2.9.2              sha256:a1c22f3d250fda6b357aa7d2148dd333a698805dd2878a08eb8f055ca8fb4e99
 ```
 
 Those containers were started with docker compose and you can use it to
