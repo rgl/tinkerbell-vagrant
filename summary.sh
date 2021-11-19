@@ -52,10 +52,18 @@ from tabulate import tabulate
 headers = ('service', 'address', 'username', 'password')
 
 def info():
-    yield ('grafana',          'http://$host_ip_address:3000', 'admin', 'admin')
-    yield ('meshcommander',    'http://$host_ip_address:4000', None, None)
-    yield ('portainer',        'http://$host_ip_address:9000', 'admin', 'abracadabra')
-    yield ('tinkerbell-nginx', 'http://$host_ip_address:8080', None, None)
+    yield ('grafana',         'http://$host_ip_address:3000', 'admin', 'admin')
+    yield ('meshcommander',   'http://$host_ip_address:4000', None, None)
+    yield ('portainer',       'http://$host_ip_address:9000', 'admin', 'abracadabra')
+    yield ('registry',        'https://$host_ip_address', 'admin', 'Admin1234')
+    yield ('osie-bootloader', 'http://$host_ip_address:8080', None, None)
+    yield ('boots',           'http://$host_ip_address', None, None)
+    yield ('boots',           'dhcp://$host_ip_address:67', None, None)
+    yield ('boots',           'tftp://$host_ip_address:69', None, None)
+    yield ('boots',           'syslog://$host_ip_address:514', None, None)
+    yield ('hegel',           'http://$host_ip_address:50061', None, None)
+    yield ('db',              'postgresql://$host_ip_address:5432', 'tinkerbell', 'tinkerbell')
+    yield ('tink-server',     'http://$host_ip_address:42114', 'admin', 'admin')
 
 print(tabulate(info(), headers=headers))
 EOF
