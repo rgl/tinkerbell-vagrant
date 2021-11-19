@@ -31,7 +31,7 @@ cat >config.sh <<'SCRIPT_EOF'
 #!/bin/bash
 set -euo pipefail
 
-# NB you can see this script logs with jounalctl -u live-config.
+# NB you can see this script logs with journalctl -u live-config.
 # NB this file is executed synchronously by the live-config service
 #    (/lib/systemd/system/live-config.service) from the
 #    /lib/live/config/9990-hooks hook script.
