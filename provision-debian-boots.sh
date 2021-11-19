@@ -20,10 +20,17 @@ go install golang.org/x/tools/cmd/stringer
 go install github.com/golang/mock/mockgen
 rm -rf bin
 ln -sf "$(go env GOPATH)/bin" bin
-if [ ! -f tftp/ipxe/ipxe.efi ]; then # do not rebuild when its already there.
-    # TODO move ipxe to another repository and just install it here.
-    make ipxe
+if [ ! -f ipxe/ipxe/ipxe.efi ]; then # do not rebuild when its already there.
+    if [ ! -d /vagrant/tmp/ipxe ]; then # do not rebuild when its cached in the host.
+        make ipxe
+        rm -rf /vagrant/tmp/ipxe
+        mkdir -p /vagrant/tmp/ipxe
+        cp ipxe/ipxe/*.{efi,kpxe} /vagrant/tmp/ipxe
+    else
+        cp /vagrant/tmp/ipxe/*.{efi,kpxe} ipxe/ipxe/
+    fi
 fi
+sed -i -E 's,^(cmd/boots/boots: .+) ipxe (.+),\1 \2,g' rules.mk # remove the ipxe dep (we've built or copied it over in the previous step and do not want to build it again).
 make cmd/boots/boots-linux-amd64 cmd/boots/boots-linux-arm64
 docker buildx build \
     --tag $TINKERBELL_HOST_IP/debian-boots \
