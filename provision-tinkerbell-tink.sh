@@ -5,17 +5,17 @@ source /vagrant/tink-helpers.source.sh
 # checkout the tinkerbell tink repository.
 if [ ! -d ~/tinkerbell-tink ]; then
     cd ~
-    git clone --no-checkout https://github.com/rgl/tinkerbell-tink.git tinkerbell-tink
+    git clone --no-checkout https://github.com/tinkerbell/tink.git tinkerbell-tink
     cd tinkerbell-tink
-    git checkout -f rgl-fix-capture-actions-logs
+    git checkout -f 187a3c7b37caf17be5c17a612da752778b2940f7 # 2021-11-02T19:01:59Z
 fi
 
 # build tink-worker.
 # see https://github.com/tinkerbell/tink/pull/549
+# see https://github.com/tinkerbell/tink/pull/552
 cd ~/tinkerbell-tink
 go install golang.org/x/tools/cmd/goimports
 go install golang.org/x/tools/cmd/stringer
-go install github.com/golang/mock/mockgen
 rm -rf bin
 ln -sf "$(go env GOPATH)/bin" bin
 make cmd/tink-worker/tink-worker-linux-amd64 cmd/tink-worker/tink-worker-linux-arm64
