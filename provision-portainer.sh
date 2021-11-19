@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euxo pipefail
 
-portainer_version="${1:-2.9.0}"; shift || true
+portainer_version="${1:-2.9.2}"; shift || true
 
 docker volume create portainer_data
 docker run \
