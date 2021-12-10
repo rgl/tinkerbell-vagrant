@@ -1,7 +1,9 @@
 #!/bin/bash
 set -euxo pipefail
 
-portainer_version="${1:-2.9.2}"; shift || true
+# see https://github.com/portainer/portainer/releases
+# see https://hub.docker.com/r/portainer/portainer-ce/tags
+portainer_version="${1:-2.11.0}"; shift || true
 
 docker volume create portainer_data
 docker run \
