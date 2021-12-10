@@ -20,6 +20,18 @@ grub-pc	grub-pc/install_devices_disks_changed	multiselect	/dev/sda
 grub-pc	grub-pc/install_devices	multiselect	/dev/sda
 EOF
 
+
+# disable IPv6.
+cat >/etc/sysctl.d/98-disable-ipv6.conf <<'EOF'
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+EOF
+systemctl restart procps
+sed -i -E 's,(GRUB_CMDLINE_LINUX=.+)",\1 ipv6.disable=1",' /etc/default/grub
+update-grub2
+
+
 # upgrade the system.
 apt-get update
 apt-get dist-upgrade -y
