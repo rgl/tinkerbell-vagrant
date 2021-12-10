@@ -1,0 +1,36 @@
+{
+  "id": "$worker_id",
+  "metadata": {
+    "facility": {
+      "facility_code": "onprem"
+    },
+    "instance": {
+      "hostname": "$worker_name"
+    },
+    "state": ""
+  },
+  "network": {
+    "interfaces": [
+      {
+        "dhcp": {
+          "arch": "x86_64",
+          "uefi": true,
+          "mac": "$worker_mac_address",
+          "ip": {
+            "address": "$worker_ip_address",
+            "netmask": "255.255.255.0",
+            "gateway": "$provisioner_ip_address"
+          },
+          "lease_time": 86400,
+          "name_servers": ["1.1.1.1", "1.0.0.1"],
+          "hostname": "$worker_name",
+          "iface_name": "eth0"
+        },
+        "netboot": {
+          "allow_pxe": true,
+          "allow_workflow": true
+        }
+      }
+    ]
+  }
+}
