@@ -9,7 +9,7 @@ provisioner_ip_address="${1:-10.3.0.2}"; shift || true
 # see https://github.com/tinkerbell/sandbox
 # see https://github.com/rgl/tinkerbell-tink
 tinkerbell_repository='https://github.com/tinkerbell/sandbox.git'
-tinkerbell_version='41a7ae3c6040c909bd1a496412936aea01fed260' # 2021-10-04T21:07:07Z
+tinkerbell_version='1e0157f57aba422c9e919d0865d68763f89bc215' # 2021-12-02T17:47:48Z
 cd ~
 git clone --no-checkout $tinkerbell_repository tinkerbell-sandbox
 cd tinkerbell-sandbox
@@ -35,20 +35,12 @@ docker compose run tls-gen
 docker compose up --quiet-pull --detach registry
 
 # trust the tinkerbell registry ca.
-# NB this is required to docker push our images.
+# NB this is required for docker to push our images to the tinkerbell registry.
 # NB we must restart docker for it to pick up the new certificate.
 # NB we must restart docker before we start tinkerbell, as we cannot interrupt
 #    the images-to-local-registry service before it finishes.
 source .env
-docker compose cp registry:/certs/onprem/bundle.pem /tmp/bundle.pem
-python3 >/usr/local/share/ca-certificates/tinkerbell.crt <<'EOF'
-import sys
-import pem
-
-# extract the ca certificate from the bundle.
-certificates = pem.parse_file('/tmp/bundle.pem')
-print(certificates[-1])
-EOF
+docker compose cp registry:/certs/onprem/ca-crt.pem /usr/local/share/ca-certificates/tinkerbell.crt
 update-ca-certificates
 systemctl restart docker
 docker login $TINKERBELL_HOST_IP --username admin --password-stdin <<EOF
